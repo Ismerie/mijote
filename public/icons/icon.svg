@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#C2552D"/>
+  <!-- marmite -->
+  <rect x="236" y="118" width="40" height="22" rx="8" fill="#FFF6EC"/>
+  <path d="M136 168 Q256 132 376 168 L376 186 L136 186 Z" fill="#FFF6EC"/>
+  <path d="M150 200 H362 V318 Q362 382 298 382 H214 Q150 382 150 318 Z" fill="#FFF6EC"/>
+  <rect x="104" y="222" width="54" height="26" rx="13" fill="#FFF6EC"/>
+  <rect x="354" y="222" width="54" height="26" rx="13" fill="#FFF6EC"/>
+  <text x="256" y="338" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="120" fill="#C2552D">M</text>
+</svg>
