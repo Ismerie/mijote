@@ -14,7 +14,7 @@ L'encyclopédie de plats, le planning de la semaine et la liste de courses d'un 
 | [TypeScript](https://www.typescriptlang.org) | Langage | Les erreurs de types apparaissent avant de lancer l'app |
 | [Tailwind CSS 4](https://tailwindcss.com) | Style, via des classes dans le JSX | Pas de fichiers CSS à maintenir à côté des composants |
 | [shadcn/ui](https://ui.shadcn.com) | Composants prêts à l'emploi | Le code est copié dans `src/components/ui`, donc lisible et modifiable |
-| [Supabase](https://supabase.com) | Base PostgreSQL, comptes, photos | Arrive au jalon J1 (comptes et foyer) |
+| [Supabase](https://supabase.com) | Base PostgreSQL, comptes, photos | Une base hébergée avec comptes et règles d'accès intégrés (RLS), branchée en J1 |
 | [Vercel](https://vercel.com) | Hébergement | Mise en ligne automatique à chaque push, prévue dans J0 |
 
 ## Lancer le projet en local
@@ -29,6 +29,27 @@ npm run dev     # lance le serveur de développement sur http://localhost:3000
 En mode dev, la page se recharge toute seule à chaque fichier enregistré.
 
 Pour tester sur ton téléphone, il doit être sur le même Wi-Fi que l'ordinateur. Ouvre alors l'adresse « Network » que `npm run dev` affiche, par exemple `http://192.168.1.12:3000`. L'installation sur l'écran d'accueil, elle, ne marche qu'en HTTPS, donc une fois le site en ligne.
+
+## Base de données (Supabase)
+
+L'app lit ses clés Supabase dans `.env.local`, un fichier qui n'est jamais commité :
+
+```bash
+cp .env.example .env.local   # puis remplis les deux valeurs (Supabase > Project Settings > API Keys)
+```
+
+Les tables sont décrites par des fichiers SQL dans `supabase/migrations/`, appliqués avec la CLI Supabase (installée dans le projet, d'où le `npx`) :
+
+```bash
+npx supabase login                         # une fois : ouvre le navigateur pour te connecter
+npx supabase link --project-ref <ref>      # une fois : relie le dossier à ton projet en ligne
+npx supabase db push                       # applique les migrations pas encore passées
+npx supabase migration new nom_explicite   # crée un nouveau fichier de migration vide
+```
+
+Le `<ref>` est l'identifiant du projet, visible dans son adresse : `https://<ref>.supabase.co`. On ne modifie jamais une table à la main dans l'interface Supabase : chaque changement passe par une migration, pour que le dépôt reste la source de vérité.
+
+La page `/statut` affiche une valeur lue en base : c'est le test que tout est bien branché.
 
 ## Les autres commandes
 
