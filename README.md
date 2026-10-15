@@ -43,8 +43,8 @@ Les tables sont décrites par des fichiers SQL dans `supabase/migrations/`, appl
 ```bash
 npx supabase login                         # une fois : ouvre le navigateur pour te connecter
 npx supabase link --project-ref <ref>      # une fois : relie le dossier à ton projet en ligne
-npx supabase db push                       # applique les migrations pas encore passées
-npx supabase migration new nom_explicite   # crée un nouveau fichier de migration vide
+npm run db:push                            # applique à la base en ligne les migrations pas encore passées
+npm run db:migration -- nom_explicite      # crée un nouveau fichier de migration vide
 ```
 
 Le `<ref>` est l'identifiant du projet, visible dans son adresse : `https://<ref>.supabase.co`. On ne modifie jamais une table à la main dans l'interface Supabase : chaque changement passe par une migration, pour que le dépôt reste la source de vérité.
@@ -53,12 +53,14 @@ La page `/statut` affiche une valeur lue en base : c'est le test que tout est bi
 
 ### Tester les règles d'accès
 
-Les tests de la base sont des fichiers SQL dans `supabase/tests/`, écrits avec [pgTAP](https://pgtap.org). Ils vérifient par exemple qu'un compte ne lit pas le foyer d'un autre. Ils tournent dans une base Supabase locale et jetable, jamais sur la base en ligne, et demandent Docker :
+Les tests de la base sont des fichiers SQL dans `supabase/tests/`, écrits avec [pgTAP](https://pgtap.org). Ils vérifient par exemple qu'un compte ne lit pas le foyer d'un autre. Ils tournent dans une base Supabase locale et jetable, jamais sur la base en ligne, et demandent Docker (Docker Desktop lancé) :
 
 ```bash
-npx supabase db start   # démarre la base locale et y applique les migrations
-npm run test:db         # lance les tests de supabase/tests/
-npx supabase stop       # arrête la base locale
+npm run db:start    # démarre Supabase en local (base, API, comptes) et applique les migrations
+npm run test:db     # lance les tests de supabase/tests/
+npm run db:reset    # repart d'une base locale vide et rejoue toutes les migrations
+npm run db:status   # affiche l'URL et les clés de la base locale (pour .env.local)
+npm run db:stop     # arrête Supabase en local
 ```
 
 GitHub les lance aussi automatiquement sur chaque pull request (`.github/workflows/database.yml`).
