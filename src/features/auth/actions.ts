@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 import { readCredentials, validateCredentials } from "./credentials";
+import { NEXT_PARAM, safeNextPath } from "./next-path";
 
 export type AuthFormState = {
   error?: string;
@@ -36,7 +37,7 @@ export async function signUp(_prev: AuthFormState, formData: FormData): Promise<
   }
 
   // La confirmation par email est désactivée en V1 (#16) : le compte est connecté tout de suite.
-  redirect("/");
+  redirect(safeNextPath(formData.get(NEXT_PARAM)));
 }
 
 export async function signIn(_prev: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -56,7 +57,8 @@ export async function signIn(_prev: AuthFormState, formData: FormData): Promise<
     return { error: "La connexion a échoué, réessaie dans un instant.", email };
   }
 
-  redirect("/");
+  // Retour à la page demandée avant la connexion (#6), l'accueil sinon.
+  redirect(safeNextPath(formData.get(NEXT_PARAM)));
 }
 
 export async function signOut() {
