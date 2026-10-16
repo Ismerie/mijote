@@ -43,13 +43,27 @@ Les tables sont décrites par des fichiers SQL dans `supabase/migrations/`, appl
 ```bash
 npx supabase login                         # une fois : ouvre le navigateur pour te connecter
 npx supabase link --project-ref <ref>      # une fois : relie le dossier à ton projet en ligne
-npx supabase db push                       # applique les migrations pas encore passées
-npx supabase migration new nom_explicite   # crée un nouveau fichier de migration vide
+npm run db:push                            # applique à la base en ligne les migrations pas encore passées
+npm run db:migration -- nom_explicite      # crée un nouveau fichier de migration vide
 ```
 
 Le `<ref>` est l'identifiant du projet, visible dans son adresse : `https://<ref>.supabase.co`. On ne modifie jamais une table à la main dans l'interface Supabase : chaque changement passe par une migration, pour que le dépôt reste la source de vérité.
 
 La page `/statut` affiche une valeur lue en base : c'est le test que tout est bien branché.
+
+### Tester les règles d'accès
+
+Les tests de la base sont des fichiers SQL dans `supabase/tests/`, écrits avec [pgTAP](https://pgtap.org). Ils vérifient par exemple qu'un compte ne lit pas le foyer d'un autre. Ils tournent dans une base Supabase locale et jetable, jamais sur la base en ligne, et demandent Docker (Docker Desktop lancé) :
+
+```bash
+npm run db:start    # démarre Supabase en local (base, API, comptes) et applique les migrations
+npm run test:db     # lance les tests de supabase/tests/
+npm run db:reset    # repart d'une base locale vide et rejoue toutes les migrations
+npm run db:status   # affiche l'URL et les clés de la base locale (pour .env.local)
+npm run db:stop     # arrête Supabase en local
+```
+
+GitHub les lance aussi automatiquement sur chaque pull request (`.github/workflows/database.yml`).
 
 ## Les autres commandes
 
@@ -122,6 +136,10 @@ src/
 public/             fichiers servis tels quels (icônes)
 ```
 
+### Langue du code
+
+Le code est en anglais : tables, colonnes, fonctions, variables, composants, dossiers. Les commentaires, les textes affichés dans l'app et les adresses des pages (`/statut`) restent en français. Le vocabulaire suit le modèle de données : foyer = `household`, membre = `member`, portions = `servings`.
+
 ### Règle de rangement : `app/` pour les adresses, `features/` pour le métier
 
 Dans `src/app`, Next.js reconnaît les fichiers à leur nom (`page.tsx`, `layout.tsx`, `manifest.ts`, `icon.svg`…), et leur emplacement décide de l'adresse à laquelle ils répondent. On n'y met donc que ce qui sert au routage.
@@ -130,15 +148,15 @@ Le code métier va dans `src/features/`, avec un dossier par domaine, qui suit l
 
 ```
 src/features/
-  foyer/            J1 : comptes, foyer, invitations
-  encyclopedie/     J2 : plats, ingrédients, recherche
+  household/        J1 : comptes, foyer, invitations
+  encyclopedia/     J2 : plats, ingrédients, recherche
   planning/         J3 : semaine, repas, restes
-  courses/          J4 : liste générée, rayons, coches
+  groceries/        J4 : liste générée, rayons, coches
 ```
 
 Chaque domaine contient ses composants, ses requêtes Supabase et ses types. Une `page.tsx` reste mince : elle récupère les données et assemble les composants de la feature. Seul ce qui sert à plusieurs domaines va dans `src/components/` ou `src/lib/`.
 
-Pour regrouper des pages sans changer leur adresse, on utilise des dossiers entre parenthèses, par exemple `app/(connecte)/` pour les pages qui demandent d'être connecté. Ils arriveront en J1. Ces dossiers seront créés au fil des jalons, pas avant.
+Pour regrouper des pages sans changer leur adresse, on utilise des dossiers entre parenthèses, par exemple `app/(signed-in)/` pour les pages qui demandent d'être connecté. Ils arriveront en J1. Ces dossiers seront créés au fil des jalons, pas avant.
 
 ## Notes
 

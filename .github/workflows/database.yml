@@ -1,0 +1,19 @@
+# Applique les migrations dans une base Supabase jetable et lance les tests de supabase/tests/.
+name: Base de données
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Migrations et règles d'accès
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.119.0
+      - run: supabase db start
+      - run: supabase test db
