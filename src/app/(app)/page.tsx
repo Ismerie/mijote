@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { SignOutButton } from "@/features/auth/sign-out-button";
 import { getCurrentHousehold } from "@/features/household/current-household";
@@ -23,6 +24,9 @@ export default async function Home() {
       <p className="max-w-xs text-balance text-[#7A3219]/80">
         Bonjour {household.firstName}, bienvenue dans le foyer « {household.name} ».
       </p>
+      <Link href="/foyer/inviter" className="font-medium text-[#C2552D] underline underline-offset-4">
+        Inviter quelqu&apos;un
+      </Link>
       <SignOutButton />
     </main>
   );

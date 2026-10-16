@@ -19,6 +19,11 @@ export function AuthScreen({ title, children, switchText, switchHref, switchLabe
       <div className="flex w-full max-w-sm flex-col items-center gap-6">
         <Image src="/icons/icon.svg" alt="" width={64} height={64} className="rounded-2xl shadow-sm" priority />
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        {nextPath.startsWith("/invitation/") && (
+          <p className="text-balance text-center text-[#7A3219]/80">
+            Tu as été invité·e dans un foyer : connecte-toi ou crée ton compte pour le rejoindre.
+          </p>
+        )}
         {children}
         <p className="text-sm">
           {switchText}{" "}
