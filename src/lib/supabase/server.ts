@@ -22,7 +22,7 @@ export async function createClient() {
           }
         } catch {
           // Un Server Component ne peut pas écrire de cookies. Sans conséquence ici :
-          // le rafraîchissement de session se fera dans le proxy, ajouté avec la connexion (#5).
+          // le proxy (src/proxy.ts) rafraîchit la session à chaque requête.
         }
       },
     },
