@@ -5,6 +5,7 @@ import { supabaseEnv } from "./env";
 
 // Rafraîchit la session Supabase à chaque requête et réécrit les cookies.
 // C'est ce qui garde l'utilisatrice connectée quand elle ferme puis rouvre l'app.
+// Renvoie aussi l'utilisatrice connectée (ou null) pour que le proxy décide des redirections.
 export async function updateSession(request: NextRequest) {
   const { url, publishableKey } = supabaseEnv();
   let response = NextResponse.next({ request });
@@ -29,7 +30,18 @@ export async function updateSession(request: NextRequest) {
   });
 
   // Ne rien mettre entre createServerClient et getUser : c'est getUser qui déclenche le rafraîchissement.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return response;
+  return { response, user };
+}
+
+// Redirige en gardant les cookies de session qui viennent peut-être d'être rafraîchis.
+export function redirectWithCookies(destination: URL, from: NextResponse) {
+  const redirect = NextResponse.redirect(destination);
+  for (const cookie of from.cookies.getAll()) {
+    redirect.cookies.set(cookie);
+  }
+  return redirect;
 }

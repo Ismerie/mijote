@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 
 import type { AuthFormState } from "./actions";
 import { MIN_PASSWORD_LENGTH } from "./credentials";
+import { NEXT_PARAM, withNext } from "./next-path";
 
 type Props = {
   action: (prev: AuthFormState, formData: FormData) => Promise<AuthFormState>;
@@ -17,15 +18,18 @@ type Props = {
   passwordAutoComplete: "new-password" | "current-password";
   submitLabel: string;
   pendingLabel: string;
+  // Page où aller après la connexion (#6).
+  nextPath: string;
 };
 
 // Formulaire email + mot de passe, partagé par la connexion et l'inscription.
-export function AuthForm({ action, passwordAutoComplete, submitLabel, pendingLabel }: Props) {
+export function AuthForm({ action, passwordAutoComplete, submitLabel, pendingLabel, nextPath }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const isSignUp = passwordAutoComplete === "new-password";
 
   return (
     <form action={formAction} className="flex w-full flex-col gap-4" noValidate>
+      <input type="hidden" name={NEXT_PARAM} value={nextPath} />
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">Email</Label>
         {/* La clé recrée le champ quand l'email renvoyé change : Base UI refuse qu'on modifie defaultValue. */}
@@ -68,7 +72,7 @@ export function AuthForm({ action, passwordAutoComplete, submitLabel, pendingLab
         <p role="alert" className="text-sm text-red-700">
           {state.error}{" "}
           {state.accountExists && (
-            <Link href="/connexion" className="font-medium underline">
+            <Link href={withNext("/connexion", nextPath)} className="font-medium underline">
               Connecte-toi
             </Link>
           )}
