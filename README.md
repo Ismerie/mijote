@@ -1,9 +1,10 @@
 # Mijote
 
-L'encyclopédie de plats, le planning de la semaine et la liste de courses d'un foyer, dans une app web installable sur téléphone (PWA).
+Les plats, le planning de la semaine et la liste de courses d'un foyer, dans une app web installable sur téléphone (PWA).
 
 - Roadmap : https://claude.ai/code/artifact/99f84f3b-a1c7-4c0a-bfc7-5c074664b5b7
 - Modèle de données : https://claude.ai/code/artifact/fd329e4a-41b7-4055-9063-a74046213c2a
+- Journal du workflow IA : [docs/workflow-ia.md](docs/workflow-ia.md)
 
 ## La stack
 
@@ -68,12 +69,14 @@ GitHub les lance aussi automatiquement sur chaque pull request (`.github/workflo
 ## Les autres commandes
 
 ```bash
-npm run lint    # ESLint vérifie le code (erreurs fréquentes, règles React et Next.js)
-npm run build   # construit la version de production, comme le fera Vercel
-npm run start   # sert cette version de production en local (après un build)
+npm run lint        # ESLint vérifie le code (erreurs fréquentes, règles React et Next.js)
+npm run typecheck   # TypeScript vérifie les types, sans rien construire
+npm test            # lance les tests Vitest (fichiers *.test.ts à côté du code)
+npm run build       # construit la version de production, comme le fera Vercel
+npm run start       # sert cette version de production en local (après un build)
 ```
 
-Lance `npm run build` avant de pousser : s'il échoue en local, il échouera aussi sur Vercel.
+Lance-les avant de pousser : GitHub les relance sur chaque pull request (`.github/workflows/app.yml`), et si le build échoue en local, il échouera aussi sur Vercel.
 
 ## Comment le projet a été créé
 
@@ -148,9 +151,12 @@ Le code métier va dans `src/features/`, avec un dossier par domaine, qui suit l
 
 ```
 src/features/
-  household/        J1 : comptes, foyer, invitations
-  encyclopedia/     J2 : plats, ingrédients, recherche
-  planning/         J3 : semaine, repas, restes
+  auth/             J1 : connexion, inscription
+  household/        J1 : foyer
+  invitation/       J1 : invitations dans le foyer
+  dish/             J2 : plats, recherche
+  ingredient/       J2 : ingrédients
+  menu/             J3 : semaine, repas, restes
   groceries/        J4 : liste générée, rayons, coches
 ```
 
@@ -160,5 +166,5 @@ Pour regrouper des pages sans changer leur adresse, on utilise des dossiers entr
 
 ## Notes
 
-- `AGENTS.md` et `CLAUDE.md` ont été créés par `create-next-app`. Ils indiquent aux assistants IA de lire la documentation de Next.js 16 fournie dans `node_modules/next/dist/docs/`.
+- `AGENTS.md` et `CLAUDE.md` ont été créés par `create-next-app`. `AGENTS.md` contient le bloc de Next.js (lire la documentation de Next.js 16 dans `node_modules/next/dist/docs/`), suivi des règles du projet pour les agents IA. `CLAUDE.md` l'importe.
 - `npm audit` signale 5 failles « high ». Elles se trouvent dans les outils ESLint, qui ne servent qu'au développement et n'arrivent jamais dans l'app en ligne. Le correctif proposé (`npm audit fix --force`) rétrograderait `eslint-config-next` vers la version 14, donc on attend une mise à jour de Next.js.
