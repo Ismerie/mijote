@@ -204,3 +204,33 @@ export function menuDays(menu: MenuPeriod): { date: string; label: string }[] {
     return { date, label: capitalize(shortDay(date)) };
   });
 }
+
+// Ce qui peut passer au menu suivant (#30), en deux groupes :
+// les plats jamais cuisinés (reportés entiers, une ligne par plat) et les restes d'un plat cuisiné
+// (une ligne par repas pas mangé).
+export type CarryOverChoices = {
+  uncooked: { menuDishId: string; name: string; servings: number; mealIds: string[] }[];
+  leftovers: { mealId: string; name: string; servings: number; when: string }[];
+};
+
+export function carryOverChoices(menu: Menu): CarryOverChoices {
+  const uncooked: CarryOverChoices["uncooked"] = [];
+  const leftovers: CarryOverChoices["leftovers"] = [];
+  for (const dish of menu.dishes) {
+    const left = dish.meals.filter((meal) => !meal.eaten);
+    if (left.length === 0) continue;
+    if (!dish.cookedAt) {
+      uncooked.push({
+        menuDishId: dish.id,
+        name: dish.name,
+        servings: totalServings({ meals: left }),
+        mealIds: left.map((meal) => meal.id),
+      });
+    } else {
+      for (const meal of left) {
+        leftovers.push({ mealId: meal.id, name: dish.name, servings: meal.servings, when: mealWhen(meal) });
+      }
+    }
+  }
+  return { uncooked, leftovers };
+}
