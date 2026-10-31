@@ -50,7 +50,7 @@ input,select,textarea{font:inherit;color:#1E1C19}
 <sc-for list="{{dishCards}}" as="item" hint-placeholder-count="5">
 <div style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 10px 12px 10px 10px">
 <button type="button" onClick="{{item.toggle}}" aria-label="{{item.boxLabel}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex: none">
-<span style="width: 24px; height: 24px; border-radius: 7px; border: 2px solid {{item.boxBorder}}; background: {{item.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<span style="width: 26px; height: 26px; border-radius: 13px; border: 2px solid {{item.boxBorder}}; background: {{item.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
 <sc-if value="{{item.cooked}}" hint-placeholder-val="{{false}}">
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{item.checkColor}}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
 </sc-if>
@@ -101,9 +101,9 @@ input,select,textarea{font:inherit;color:#1E1C19}
 </button>
 <button type="button" onClick="{{item.open}}" style="flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
 <span style="font-size: 16px; font-weight: 600; color: {{item.nameColor}}; text-decoration: {{item.nameDeco}}">{{item.name}}</span>
-<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; color: #6B655C"><span>{{item.portions}} · {{item.slotLabel}}</span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; color: #6B655C"><span>{{item.daySub}}</span>
 <sc-if value="{{item.toCook}}" hint-placeholder-val="{{false}}">
-<span style="background: #ECE8E0; color: #4A453E; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">À cuisiner</span>
+<span style="display: flex; align-items: center; gap: 4px; color: #8A5A1F"><span style="width: 6px; height: 6px; border-radius: 3px; background: #C98A3D"></span>à cuisiner</span>
 </sc-if>
 </span>
 </button>
@@ -284,6 +284,58 @@ Ajouter un plat au menu
 </div>
 </sc-if>
 
+<!-- ===================== UN PLAT AU MENU (fournée) ===================== -->
+<sc-if value="{{isBatch}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">{{bsh.name}}</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 24px">
+<button type="button" onClick="{{bsh.toggle}}" aria-label="{{bsh.boxLabel}}" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px; min-height: 64px; text-align: left">
+<span style="width: 26px; height: 26px; flex: none; border-radius: 13px; border: 2px solid {{bsh.boxBorder}}; background: {{bsh.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{bsh.cooked}}" hint-placeholder-val="{{true}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{bsh.checkColor}}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600">{{bsh.state}}</span>
+<span style="font-size: 13px; color: #6B655C">{{bsh.stateSub}}</span>
+</span>
+</button>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Repas <span style="font-weight: 400; color: #6B655C">· {{bsh.portions}}</span></h2>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; overflow: hidden">
+<sc-for list="{{bsh.meals}}" as="m" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 4px; padding: 4px 8px 4px 6px; border-top: 1px solid {{m.sep}}">
+<button type="button" onClick="{{m.toggle}}" aria-label="{{m.boxLabel}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex: none">
+<span style="width: 24px; height: 24px; border-radius: 7px; border: 2px solid {{m.boxBorder}}; background: {{m.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{m.eaten}}" hint-placeholder-val="{{false}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+</button>
+<button type="button" onClick="{{m.open}}" style="flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 1px">
+<span style="font-weight: 600; color: {{m.nameColor}}; text-decoration: {{m.nameDeco}}">{{m.portions}}</span>
+<span style="font-size: 13px; color: {{m.whenColor}}">{{m.when}}</span>
+</button>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9387" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 13px; color: #6B655C">Touche un repas pour choisir son jour ou le séparer.</p>
+</section>
+<a href="#" onClick="{{bsh.openRecipe}}" style="font-size: 15px; font-weight: 600; min-height: 44px; display: flex; align-items: center">Voir la recette</a>
+</main>
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4; display: flex; flex-direction: column; gap: 4px">
+<button type="button" onClick="{{back}}" style="height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">OK</button>
+<button type="button" onClick="{{bsh.remove}}" style="min-height: 44px; font-weight: 600; color: #A3341F; text-align: center">Retirer ce plat du menu</button>
+</div>
+</div>
+</sc-if>
+
 <!-- ===================== UN REPAS DU MENU : jour, moment ===================== -->
 <sc-if value="{{isMeal}}" hint-placeholder-val="{{false}}">
 <div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
@@ -297,17 +349,8 @@ Ajouter un plat au menu
 <div style="display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px">
 <span style="font-weight: 600">{{meal.portions}}</span>
 <span style="font-size: 13px; color: #6B655C">{{meal.batch}}</span>
-<a href="#" onClick="{{meal.openRecipe}}" style="font-size: 14px; font-weight: 600; min-height: 32px; display: flex; align-items: center">Voir la recette</a>
+<a href="#" onClick="{{meal.openBatch}}" style="font-size: 14px; font-weight: 600; min-height: 32px; display: flex; align-items: center">{{meal.batchLink}}</a>
 </div>
-<button type="button" onClick="{{meal.toggleCooked}}" aria-pressed="{{meal.cooked}}" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px; min-height: 64px; text-align: left">
-<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
-<span style="font-weight: 600">Plat cuisiné</span>
-<span style="font-size: 13px; color: #6B655C">{{meal.cookedSub}}</span>
-</span>
-<span style="width: 46px; height: 28px; flex: none; border-radius: 14px; background: {{meal.switchBg}}; display: flex; justify-content: {{meal.switchSide}}; align-items: center; padding: 3px; box-sizing: border-box">
-<span style="width: 22px; height: 22px; border-radius: 11px; background: #FFFFFF"></span>
-</span>
-</button>
 <sc-if value="{{meal.canSplit}}" hint-placeholder-val="{{true}}">
 <section style="display: flex; flex-direction: column; gap: 10px">
 <h2 style="margin: 0; font-size: 15px; font-weight: 600">Séparer ce repas</h2>
@@ -1004,6 +1047,8 @@ class Component extends DCLogic {
     const repasLabel = (n) => n + (n > 1 ? ' repas' : ' repas');
     const green = '#2E6A4C';
     const batchOf = (id) => s.batches.filter((b) => b.id === id)[0];
+    // Nom d'une fournée : « Lasagnes (2) » quand le même plat est plusieurs fois dans le menu.
+    const batchName = (bt) => { const same = s.batches.filter((x) => x.p === bt.p && x.plat === bt.plat); return P[bt.plat].name + (same.length > 1 ? ' (' + (same.indexOf(bt) + 1) + ')' : ''); };
     const todayOff = (bt) => { const pr = s.periods.filter((x) => x.id === bt.p)[0]; return Math.round((new Date(TODAY + 'T00:00:00Z') - new Date(pr.start + 'T00:00:00Z')) / 86400000); };
     // Découpe les portions d'une recette en repas pour le foyer : 5 portions à 2 → [2, 2, 1].
     const split = (k, times) => {
@@ -1026,7 +1071,8 @@ class Component extends DCLogic {
       const siblings = s.meals.filter((x) => x.b === m.b);
       const part = siblings.length > 1 ? ' · repas ' + (siblings.indexOf(m) + 1) + ' sur ' + siblings.length : '';
       return {
-        name: p.name, portions: portionsLabel(m.portions) + part, when: when(m),
+        id: m.id, name: batchName(bt), portions: portionsLabel(m.portions) + part, when: when(m),
+        daySub: portionsLabel(m.portions) + (m.slot ? ' · ' + m.slot.toLowerCase() : ''),
         whenColor: (m.day == null && !m.slot) ? '#8A8378' : '#4A453E',
         slotLabel: m.slot || 'sans moment précis',
         carried: !!bt.carried, carriedLabel: bt.cooked != null ? 'Reste' : 'Reporté', eaten: !!m.eaten,
@@ -1045,7 +1091,7 @@ class Component extends DCLogic {
           meals: this.state.meals.map((x) => x.id === m.id ? Object.assign({}, x, { eaten: !x.eaten }) : x),
           batches: (!m.eaten && bt.cooked == null) ? this.state.batches.map((b) => b.id === bt.id ? Object.assign({}, b, { cooked: m.day != null ? m.day : todayOff(bt) }) : b) : this.state.batches
         }),
-        open: go({ screen: 'meal', mealId: m.id })
+        open: go({ screen: 'meal', mealId: m.id, mealBack: 'menu' })
       };
     });
     const eatenCount = menuItems.filter((x) => x.eaten).length;
@@ -1057,7 +1103,7 @@ class Component extends DCLogic {
       const cooked = bt.cooked != null, done = cooked && left === 0;
       const same = viewBatches.filter((x) => x.plat === bt.plat);
       return {
-        name: p.name + (same.length > 1 ? ' (' + (same.indexOf(bt) + 1) + ')' : ''), cooked: cooked,
+        id: bt.id, name: batchName(bt), cooked: cooked,
         sub: portionsLabel(total) + ' · ' + (!cooked ? 'à cuisiner' : (done ? 'tout mangé' : (left > 1 ? left + ' restantes' : left + ' restante'))),
         carried: !!bt.carried, carriedLabel: cooked ? 'Reste' : 'Reporté',
         nameColor: done ? '#8A8378' : '#1E1C19', nameDeco: done ? 'line-through' : 'none',
@@ -1073,7 +1119,7 @@ class Component extends DCLogic {
           batches: this.state.batches.map((b) => b.id === bt.id ? Object.assign({}, b, { cooked: null, cookedFrom: null }) : b),
           meals: this.state.meals.map((x) => x.b === bt.id ? Object.assign({}, x, { eaten: false }) : x)
         })),
-        open: go({ screen: 'plat', platId: bt.plat, platBack: 'menu' })
+        open: go({ screen: 'batch', batchId: bt.id })
       };
     });
     const cookedCount = dishCards.filter((x) => x.cooked).length;
@@ -1100,6 +1146,35 @@ class Component extends DCLogic {
     }).filter((g) => g.items.length || active || g.label !== 'À placer') : [];
     const movingMeal = s.meals.filter((m) => m.id === s.moveId)[0];
 
+    // Un plat au menu (fournée) : état à trois temps et ses repas
+    const cb0 = batchOf(s.batchId) || s.batches[0];
+    let bsh = {};
+    if (cb0) {
+      const card = (period && cb0.p === period.id ? dishCards : []).filter((c) => c.id === cb0.id)[0];
+      const ms = s.meals.filter((x) => x.b === cb0.id);
+      const cooked = cb0.cooked != null, left = ms.filter((x) => !x.eaten).length, done = cooked && left === 0;
+      const cookedOn = cooked ? (cb0.cookedFrom || shortDay(dateAt(batchPeriod(ms[0] ? ms[0].b : cb0.id).start, cb0.cooked))) : '';
+      bsh = {
+        name: batchName(cb0), cooked: cooked,
+        portions: portionsLabel(P[cb0.plat].servings),
+        state: !cooked ? 'À cuisiner' : (done ? 'Tout mangé' : 'Cuisiné le ' + cookedOn),
+        stateSub: !cooked ? 'Touche quand le plat est cuisiné.' : (done ? 'Touche pour remettre à cuisiner.' : 'Touche quand tout est mangé.'),
+        boxBg: done ? green : (cooked ? '#E5F0E9' : '#FFFFFF'), boxBorder: cooked ? green : '#A8A094', checkColor: done ? '#FFFFFF' : green,
+        boxLabel: card ? card.boxLabel : '', toggle: card ? card.toggle : null,
+        openRecipe: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'plat', platId: cb0.plat, platBack: 'batch' }); },
+        remove: () => { this.setState({ batches: this.state.batches.filter((b) => b.id !== cb0.id), meals: this.state.meals.filter((x) => x.b !== cb0.id), screen: 'menu' }); },
+        meals: ms.map((m, i) => ({
+          portions: portionsLabel(m.portions), when: when(m), whenColor: (m.day == null && !m.slot) ? '#8A8378' : '#6B655C',
+          eaten: !!m.eaten, sep: i === 0 ? 'transparent' : '#EFEBE3',
+          nameColor: m.eaten ? '#8A8378' : '#1E1C19', nameDeco: m.eaten ? 'line-through' : 'none',
+          boxBg: m.eaten ? green : '#FFFFFF', boxBorder: m.eaten ? green : '#A8A094',
+          boxLabel: (m.eaten ? 'Marquer comme pas mangé : ' : 'Marquer comme mangé : ') + portionsLabel(m.portions),
+          toggle: (menuItems.filter((x) => x.id === m.id)[0] || {}).toggle,
+          open: go({ screen: 'meal', mealId: m.id, mealBack: 'batch' })
+        }))
+      };
+    }
+
     // Un repas du menu
     const cm = s.meals.filter((m) => m.id === s.mealId)[0] || s.meals[0];
     const setMeal = (o) => () => this.setState({ meals: this.state.meals.map((x) => x.id === cm.id ? Object.assign({}, x, o) : x) });
@@ -1110,8 +1185,9 @@ class Component extends DCLogic {
       const bt = batchOf(cm.b), p = P[bt.plat];
       const siblings = s.meals.filter((x) => x.b === cm.b);
       meal = {
-        name: p.name,
-        portions: portionsLabel(cm.portions) + (siblings.length > 1 ? ' · repas ' + (siblings.indexOf(cm) + 1) + ' sur ' + siblings.length : ''),
+        name: batchName(bt), batchLink: 'Voir ' + batchName(bt) + ' au menu',
+        openBatch: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'batch', batchId: bt.id }); },
+        portions: portionsLabel(cm.portions),
         batch: 'Recette de ' + portionsLabel(p.servings) + (bt.carried ? ', reportée du menu précédent' : ''),
         openRecipe: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'plat', platId: bt.plat, platBack: 'meal' }); },
         // « Plat cuisiné » vaut pour toute la fournée ; le décocher décoche aussi « mangé » sur ses repas.
@@ -1332,7 +1408,8 @@ class Component extends DCLogic {
       const sc = s.screen;
       if (sc === 'plat') this.setState({ screen: s.platBack });
       else if (sc === 'form') this.setState({ screen: isEdit ? 'plat' : 'plats', demo: null });
-      else if (sc === 'meal') this.setState({ screen: 'menu' });
+      else if (sc === 'meal') this.setState({ screen: s.mealBack || 'menu' });
+      else if (sc === 'batch') this.setState({ screen: 'menu' });
       else if (sc === 'prep') this.setState({ screen: 'menu' });
       else if (sc === 'ing') {
         // Un nouvel ingrédient laissé sans nom n'est pas gardé.
@@ -1348,7 +1425,7 @@ class Component extends DCLogic {
     const tab = (t) => go({ screen: t, tab: t, search: '', demo: null });
 
     return {
-      isMenu: s.screen === 'menu', isAddPick: s.screen === 'addPick', isAddRecap: s.screen === 'addRecap', isMeal: s.screen === 'meal',
+      isMenu: s.screen === 'menu', isAddPick: s.screen === 'addPick', isAddRecap: s.screen === 'addRecap', isMeal: s.screen === 'meal', isBatch: s.screen === 'batch', bsh: bsh,
       isPlats: s.screen === 'plats', isPlat: s.screen === 'plat', isForm: s.screen === 'form',
       isCourses: s.screen === 'courses', isFoyer: s.screen === 'foyer', isInvite: s.screen === 'invite',
       tabMenu: tab('menu'), tabPlats: tab('plats'), tabCourses: tab('courses'), tabFoyer: tab('foyer'),
