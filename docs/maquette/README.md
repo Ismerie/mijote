@@ -21,12 +21,12 @@ Si la maquette change sur claude.ai, il faut refaire la copie et les captures da
 
 | Capture | Écran | Tickets |
 |---|---|---|
-| [01-menu-liste](ecrans/01-menu-liste.png) | Accueil : menu en cours, vue « En liste » (période, repas, case « mangé », badges « À cuisiner », « Reporté » et « Reste ») | #28, #30 |
-| [02-menu-par-jour](ecrans/02-menu-par-jour.png) | Accueil, vue « Par jour » : « À placer » puis tous les jours du menu | #29 |
+| [01-menu-liste](ecrans/01-menu-liste.png) | Accueil : menu en cours, vue « En liste » : une carte par plat ajouté, case « cuisiné », portions restantes, badges « Reporté » et « Reste » | #28, #30 |
+| [02-menu-par-jour](ecrans/02-menu-par-jour.png) | Accueil, vue « Par jour » : les repas, case « mangé », badge « À cuisiner », « À placer » puis tous les jours du menu | #29 |
 | [03-menu-deplacer-repas](ecrans/03-menu-deplacer-repas.png) | Vue « Par jour » après la poignée ⋮⋮ : boutons « Placer ici » | #29 |
 | [04-preparer-menu-suivant](ecrans/04-preparer-menu-suivant.png) | Préparer le menu suivant : durée, repas à reporter en deux groupes (« Pas cuisinés », « Restes ») | #30 |
 | [05-ajouter-choisir-plats](ecrans/05-ajouter-choisir-plats.png) | Ajouter au menu, étape 1 : choisir plusieurs plats | #28 |
-| [06-ajouter-recap](ecrans/06-ajouter-recap.png) | Ajouter au menu, étape 2 : × N par recette et découpe en repas | #28 |
+| [06-ajouter-recap](ecrans/06-ajouter-recap.png) | Ajouter au menu, étape 2 : × N par recette (N cartes à cuisiner) et découpe en repas | #28 |
 | [07-repas](ecrans/07-repas.png) | Fiche repas : « Plat cuisiné », « Séparer ce repas », jour et moment facultatifs, retirer le repas | #29 |
 | [08-plats](ecrans/08-plats.png) | Onglet Plats : liste, recherche, badge « Au menu » | #25 |
 | [09-fiche-plat](ecrans/09-fiche-plat.png) | Fiche du plat : portions, ingrédients, recette, macros | #25 (bouton « Ajouter au menu » : #28) |
