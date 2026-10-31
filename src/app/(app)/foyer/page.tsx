@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getCurrentUser } from "@/features/auth/current-user";
+import { SignOutButton } from "@/features/auth/sign-out-button";
 import { getCurrentHousehold } from "@/features/household/current-household";
 import { getHouseholdMembers } from "@/features/household/household-members";
+import { MenuSettings } from "@/features/household/components/menu-settings";
 import { PeopleCountStepper } from "@/features/household/components/people-count-stepper";
 
 export const metadata: Metadata = { title: "Mon foyer · Mijote" };
@@ -54,9 +56,13 @@ export default async function FoyerPage() {
         <PeopleCountStepper initialCount={household.peopleCount} />
       </section>
 
-      <Link href="/" className="text-sm underline underline-offset-4">
-        Retour à l&apos;accueil
-      </Link>
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">Organisation des menus</h2>
+        <MenuSettings shoppingDay={household.shoppingDay} menuLengthDays={household.menuLengthDays} />
+      </section>
+
+      {/* L'accueil devient le menu (#28) : la déconnexion, qui y était, passe ici comme sur la maquette. */}
+      <SignOutButton />
     </main>
   );
 }

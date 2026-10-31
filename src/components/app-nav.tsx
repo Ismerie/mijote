@@ -10,7 +10,7 @@ type Tab = { label: string; icon: LucideIcon; href?: string; match: (path: strin
 
 // Barre du bas commune à tous les écrans (maquette). Courses arrive en J4 (#32) : grisé d'ici là.
 const TABS: Tab[] = [
-  { label: "Menu", icon: CalendarDays, href: "/", match: (path) => path === "/" },
+  { label: "Menu", icon: CalendarDays, href: "/", match: (path) => path === "/" || path.startsWith("/menu") },
   { label: "Plats", icon: CookingPot, href: "/plats", match: (path) => path.startsWith("/plats") },
   { label: "Courses", icon: ShoppingCart, match: () => false },
   { label: "Foyer", icon: House, href: "/foyer", match: (path) => path.startsWith("/foyer") },
