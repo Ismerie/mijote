@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   carriedOverLabel,
+  carryOverChoices,
   groupMealsByDay,
   mealSubtitle,
   mealWhen,
@@ -16,6 +17,7 @@ import {
   withMealEaten,
   withMenuDishState,
   type Meal,
+  type Menu,
   type MenuDish,
 } from "./menu";
 
@@ -197,5 +199,24 @@ describe("splitOptions", () => {
 
   it("should offer nothing when the meal has 1 serving", () => {
     expect(splitOptions(1)).toEqual([]);
+  });
+});
+
+describe("carryOverChoices", () => {
+  it("should offer uncooked dishes whole and the uneaten meals of cooked dishes", () => {
+    const menu = {
+      id: "p1",
+      startDate: "2026-10-17",
+      lengthDays: 14,
+      dishes: [
+        { id: "soupe", name: "Soupe", cookedAt: null, meals: [meal(2), meal(2)] },
+        { id: "las", name: "Lasagnes", cookedAt: "2026-10-20", meals: [meal(2, true), { ...meal(1), date: "2026-10-22", slot: "lunch" as const }] },
+        { id: "pesto", name: "Pesto", cookedAt: "2026-10-21", meals: [meal(2, true)] },
+      ],
+    } as Menu;
+    const choices = carryOverChoices(menu);
+    expect(choices.uncooked).toMatchObject([{ menuDishId: "soupe", name: "Soupe", servings: 4 }]);
+    expect(choices.uncooked[0].mealIds).toHaveLength(2);
+    expect(choices.leftovers).toMatchObject([{ name: "Lasagnes", servings: 1, when: "Jeu. 22 · midi" }]);
   });
 });
