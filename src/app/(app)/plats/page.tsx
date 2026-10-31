@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { PlatsTabs } from "@/components/plats-tabs";
 import { buttonVariants } from "@/components/ui/button";
 import { DishList } from "@/features/dish/components/dish-list";
 import { listDishes } from "@/features/dish/queries";
@@ -25,6 +26,7 @@ export default async function PlatsPage() {
           </Link>
         )}
       </header>
+      <PlatsTabs current="plats" />
 
       {dishes.length > 0 ? (
         <DishList dishes={dishes} />

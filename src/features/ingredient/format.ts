@@ -16,21 +16,18 @@ export function formatQuantity(quantity: number | null, unit: Unit): string {
   return `${formatNumber(quantity)} ${unitLabel(unit)}`;
 }
 
-// Façon d'acheter, en quelques mots : « au poids », « en pièces », « boîte de 400 g ».
+// Façon d'acheter, comme dans l'écran Ingrédients : « Au poids ou au volume », « À la pièce », « Boîte de 400 g ».
 export function describePurchase(ingredient: Pick<Ingredient, "purchaseMode" | "packName" | "packSize" | "packUnit">): string {
   switch (ingredient.purchaseMode) {
     case "piece":
-      return "en pièces";
-    case "pack":
-      if (ingredient.packName && ingredient.packSize !== null && ingredient.packUnit) {
-        const size =
-          ingredient.packUnit === "piece"
-            ? `${formatNumber(ingredient.packSize)} pièces`
-            : formatQuantity(ingredient.packSize, ingredient.packUnit);
-        return `${ingredient.packName} de ${size}`;
-      }
-      return "en paquet";
+      return "À la pièce";
+    case "pack": {
+      const { packName, packSize, packUnit } = ingredient;
+      if (!packName || packSize === null || !packUnit) return "En paquet";
+      const size = packUnit === "piece" ? `${formatNumber(packSize)} pièces` : formatQuantity(packSize, packUnit);
+      return `${packName.charAt(0).toUpperCase()}${packName.slice(1)} de ${size}`;
+    }
     default:
-      return "au poids";
+      return "Au poids ou au volume";
   }
 }
