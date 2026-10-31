@@ -15,12 +15,12 @@ type Props = {
 // Mise en page commune des écrans de connexion et d'inscription.
 export function AuthScreen({ title, children, switchText, switchHref, switchLabel, nextPath }: Props) {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center bg-[#FFF6EC] px-6 py-12 text-[#7A3219]">
+    <main className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-12 text-foreground">
       <div className="flex w-full max-w-sm flex-col items-center gap-6">
         <Image src="/icons/icon.svg" alt="" width={64} height={64} className="rounded-2xl shadow-sm" priority />
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         {nextPath.startsWith("/invitation/") && (
-          <p className="text-balance text-center text-[#7A3219]/80">
+          <p className="text-balance text-center text-foreground/80">
             Tu as été invité·e dans un foyer : connecte-toi ou crée ton compte pour le rejoindre.
           </p>
         )}

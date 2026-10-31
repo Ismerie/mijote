@@ -31,7 +31,7 @@ export function CreateHouseholdForm() {
           required
           maxLength={MAX_FIRST_NAME_LENGTH}
           defaultValue={fields?.firstName}
-          className="h-11 bg-white"
+          className="h-11 bg-card"
         />
       </div>
 
@@ -45,7 +45,7 @@ export function CreateHouseholdForm() {
           required
           maxLength={MAX_HOUSEHOLD_NAME_LENGTH}
           defaultValue={fields?.name}
-          className="h-11 bg-white"
+          className="h-11 bg-card"
         />
       </div>
 
@@ -62,20 +62,20 @@ export function CreateHouseholdForm() {
           required
           defaultValue={fields?.peopleCount ?? DEFAULT_PEOPLE_COUNT}
           aria-describedby="people-count-hint"
-          className="h-11 w-24 bg-white"
+          className="h-11 w-24 bg-card"
         />
-        <p id="people-count-hint" className="text-sm text-[#7A3219]/70">
+        <p id="people-count-hint" className="text-sm text-foreground/70">
           Sert à découper chaque recette en repas. Tu pourras le changer plus tard.
         </p>
       </div>
 
       {state.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-destructive">
           {state.error}
         </p>
       )}
 
-      <Button type="submit" disabled={pending} className="h-11 bg-[#C2552D] text-white hover:bg-[#A8461F]">
+      <Button type="submit" disabled={pending} className="h-11">
         {pending ? "Création…" : "Créer mon foyer"}
       </Button>
     </form>

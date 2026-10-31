@@ -14,28 +14,28 @@ export default async function FoyerPage() {
   const [user, members] = await Promise.all([getCurrentUser(), getHouseholdMembers(household.id)]);
 
   return (
-    <main className="flex flex-1 flex-col gap-8 bg-[#FAF8F4] px-4 py-8 text-[#1E1C19]">
+    <main className="flex flex-1 flex-col gap-8 bg-background px-4 py-8 text-foreground">
       <header className="flex flex-col gap-1">
         <h1 className="text-3xl font-semibold tracking-tight">Mon foyer</h1>
-        <p className="text-sm text-[#6B655C]">{household.name}</p>
+        <p className="text-sm text-muted-foreground">{household.name}</p>
       </header>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Membres</h2>
-        <ul className="divide-y divide-[#E6E1D8] overflow-hidden rounded-xl border border-[#E6E1D8] bg-white">
+        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {members.map((member) => {
             const isMe = member.userId === user?.id;
             return (
               <li key={member.userId} className="flex items-center gap-3 px-4 py-3">
                 <span
                   aria-hidden="true"
-                  className="flex size-10 items-center justify-center rounded-full bg-[#E6EFE9] font-semibold text-[#2E6A4C]"
+                  className="flex size-10 items-center justify-center rounded-full bg-secondary font-semibold text-primary"
                 >
                   {member.firstName.charAt(0).toUpperCase()}
                 </span>
                 <span>
                   {member.firstName}
-                  {isMe && <span className="text-[#6B655C]"> (toi)</span>}
+                  {isMe && <span className="text-muted-foreground"> (toi)</span>}
                 </span>
               </li>
             );
@@ -43,7 +43,7 @@ export default async function FoyerPage() {
         </ul>
         <Link
           href="/foyer/inviter"
-          className="flex h-11 items-center justify-center rounded-xl border border-[#2E6A4C] font-medium text-[#2E6A4C]"
+          className="flex h-11 items-center justify-center rounded-xl border border-primary font-medium text-primary"
         >
           Inviter quelqu&apos;un
         </Link>

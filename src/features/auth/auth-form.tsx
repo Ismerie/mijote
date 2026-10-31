@@ -44,7 +44,7 @@ export function AuthForm({ action, passwordAutoComplete, submitLabel, pendingLab
           required
           defaultValue={state.email}
           aria-invalid={state.error ? true : undefined}
-          className="h-11 bg-white"
+          className="h-11 bg-card"
         />
       </div>
 
@@ -59,17 +59,17 @@ export function AuthForm({ action, passwordAutoComplete, submitLabel, pendingLab
           minLength={isSignUp ? MIN_PASSWORD_LENGTH : undefined}
           aria-invalid={state.error ? true : undefined}
           aria-describedby={isSignUp ? "password-hint" : undefined}
-          className="h-11 bg-white"
+          className="h-11 bg-card"
         />
         {isSignUp && (
-          <p id="password-hint" className="text-sm text-[#7A3219]/70">
+          <p id="password-hint" className="text-sm text-foreground/70">
             Au moins {MIN_PASSWORD_LENGTH} caractères.
           </p>
         )}
       </div>
 
       {state.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-destructive">
           {state.error}{" "}
           {state.accountExists && (
             <Link href={withNext("/connexion", nextPath)} className="font-medium underline">
@@ -79,7 +79,7 @@ export function AuthForm({ action, passwordAutoComplete, submitLabel, pendingLab
         </p>
       )}
 
-      <Button type="submit" disabled={pending} className="h-11 bg-[#C2552D] text-white hover:bg-[#A8461F]">
+      <Button type="submit" disabled={pending} className="h-11">
         {pending ? pendingLabel : submitLabel}
       </Button>
     </form>

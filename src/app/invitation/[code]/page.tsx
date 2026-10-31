@@ -15,7 +15,7 @@ export default async function InvitationPage({ params }: PageProps<"/invitation/
   const [household, invitation] = await Promise.all([getCurrentHousehold(), getInvitation(code)]);
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center bg-[#FFF6EC] px-6 py-12 text-[#7A3219]">
+    <main className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-12 text-foreground">
       <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
         <Image src="/icons/icon.svg" alt="" width={64} height={64} className="rounded-2xl shadow-sm" priority />
         {household ? (
@@ -43,7 +43,7 @@ export default async function InvitationPage({ params }: PageProps<"/invitation/
               <h1 className="text-2xl font-semibold tracking-tight">
                 Rejoindre « {invitation.householdName} »
               </h1>
-              <p className="text-balance text-[#7A3219]/80">
+              <p className="text-balance text-foreground/80">
                 Tu as été invité·e dans ce foyer pour partager ses plats, son planning et sa liste de courses.
               </p>
             </div>
@@ -66,7 +66,7 @@ function Message({ title, children }: { title: string; children: React.ReactNode
   return (
     <div className="flex flex-col gap-2">
       <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-      <p className="text-balance text-[#7A3219]/80">{children}</p>
+      <p className="text-balance text-foreground/80">{children}</p>
     </div>
   );
 }

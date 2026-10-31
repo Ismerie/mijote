@@ -13,12 +13,12 @@ export default async function BienvenuePage() {
   if (await getCurrentHousehold()) redirect("/");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center bg-[#FFF6EC] px-6 py-12 text-[#7A3219]">
+    <main className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-12 text-foreground">
       <div className="flex w-full max-w-sm flex-col items-center gap-6">
         <Image src="/icons/icon.svg" alt="" width={64} height={64} className="rounded-2xl shadow-sm" priority />
         <div className="flex flex-col gap-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Bienvenue sur Mijote</h1>
-          <p className="text-balance text-[#7A3219]/80">
+          <p className="text-balance text-foreground/80">
             Crée ton foyer pour y ranger vos plats et organiser vos repas.
           </p>
         </div>

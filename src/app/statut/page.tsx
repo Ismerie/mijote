@@ -19,7 +19,7 @@ export default async function StatutPage() {
   const ok = !error && data !== null;
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 bg-[#FFF6EC] px-6 text-center text-[#7A3219]">
+    <main className="flex flex-1 flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
       <h1 className="text-2xl font-semibold">Base de données</h1>
       {ok ? (
         <p className="max-w-xs text-balance">✅ {data.valeur}</p>

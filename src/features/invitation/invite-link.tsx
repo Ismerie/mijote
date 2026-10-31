@@ -51,11 +51,11 @@ export function InviteLink() {
   if (!link) {
     return (
       <div className="flex w-full flex-col gap-3">
-        <Button onClick={handleCreate} disabled={pending} className="h-11 bg-[#C2552D] text-white hover:bg-[#A8461F]">
+        <Button onClick={handleCreate} disabled={pending} className="h-11">
           {pending ? "Création…" : "Créer un lien d'invitation"}
         </Button>
         {error && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-destructive">
             {error}
           </p>
         )}
@@ -65,10 +65,10 @@ export function InviteLink() {
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <p className="break-all rounded-lg border border-[#7A3219]/20 bg-white px-3 py-2 text-sm select-all">{link}</p>
+      <p className="break-all rounded-lg border border-foreground/20 bg-card px-3 py-2 text-sm select-all">{link}</p>
       <div className="flex gap-2">
         {canShare && (
-          <Button onClick={handleShare} className="h-11 flex-1 bg-[#C2552D] text-white hover:bg-[#A8461F]">
+          <Button onClick={handleShare} className="h-11 flex-1">
             Partager
           </Button>
         )}
@@ -77,12 +77,12 @@ export function InviteLink() {
         </Button>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-destructive">
           {error}
         </p>
       )}
-      <p className="text-sm text-[#7A3219]/70">Valable 7 jours, pour une seule personne.</p>
-      <Button onClick={handleCreate} variant="link" disabled={pending} className="text-[#7A3219]">
+      <p className="text-sm text-foreground/70">Valable 7 jours, pour une seule personne.</p>
+      <Button onClick={handleCreate} variant="link" disabled={pending} className="text-foreground">
         Créer un autre lien
       </Button>
     </div>
