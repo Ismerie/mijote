@@ -3,7 +3,8 @@ export const NEXT_PARAM = "suivant";
 
 // Pages accessibles sans être connectée.
 export const AUTH_PATHS = ["/connexion", "/inscription"];
-export const PUBLIC_PATHS = [...AUTH_PATHS, "/statut"];
+// "/mot-de-passe-oublie" et "/auth/confirm" : accessibles sans connexion, le lien de l'email arrive là sans session (#43).
+export const PUBLIC_PATHS = [...AUTH_PATHS, "/statut", "/mot-de-passe-oublie", "/auth/confirm"];
 
 // N'accepte qu'une adresse interne à l'app ("/plats"), jamais "//autre-site.com" ni "https://…" :
 // sinon un lien piégé pourrait renvoyer vers un autre site après la connexion.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { AuthScreen } from "@/features/auth/auth-screen";
 import { NEXT_PARAM, safeNextPath } from "@/features/auth/next-path";
@@ -18,6 +19,9 @@ export default async function ConnexionPage({ searchParams }: PageProps<"/connex
       switchLabel="Créer un compte"
     >
       <SignInForm nextPath={nextPath} />
+      <Link href="/mot-de-passe-oublie" className="text-sm underline underline-offset-4">
+        Mot de passe oublié ?
+      </Link>
     </AuthScreen>
   );
 }
