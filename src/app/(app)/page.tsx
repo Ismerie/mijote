@@ -24,8 +24,8 @@ export default async function Home() {
       <p className="max-w-xs text-balance text-[#7A3219]/80">
         Bonjour {household.firstName}, bienvenue dans le foyer « {household.name} ».
       </p>
-      <Link href="/foyer/inviter" className="font-medium text-[#C2552D] underline underline-offset-4">
-        Inviter quelqu&apos;un
+      <Link href="/foyer" className="font-medium text-[#C2552D] underline underline-offset-4">
+        Mon foyer
       </Link>
       <SignOutButton />
     </main>

@@ -4,7 +4,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(26);
+select plan(27);
 
 -- Cinq comptes de test : A crée un foyer, B en crée un autre, C, D et E testent les invitations.
 insert into auth.users (id, email) values
@@ -56,7 +56,7 @@ select is((select count(*) from public.member), 0::bigint, 'B ne voit pas les me
 select is((select count(*) from public.invitation), 0::bigint, 'B ne voit pas les invitations de A');
 
 -- Une modification sur une ligne invisible ne touche rien (vérifié plus bas, côté A).
-update public.household set name = 'Piraté', default_servings = 9 where id = current_setting('test.household_a')::uuid;
+update public.household set name = 'Piraté', people_count = 9 where id = current_setting('test.household_a')::uuid;
 delete from public.household where id = current_setting('test.household_a')::uuid;
 
 select throws_ok(
@@ -105,6 +105,10 @@ select results_eq(
   $$ values ('Foyer A') $$,
   'C voit le foyer de A, et seulement lui'
 );
+select lives_ok(
+  $$ update public.household set people_count = 5 where id = current_setting('test.household_a')::uuid $$,
+  'C, simple membre, règle le nombre de personnes du foyer'
+);
 
 select pg_temp.sign_in('00000000-0000-0000-0000-00000000000d');
 
@@ -139,8 +143,8 @@ select is((select count(*) from public.household), 0::bigint, 'E, refusée, ne v
 select pg_temp.sign_in('00000000-0000-0000-0000-00000000000a');
 
 select results_eq(
-  $$ select name, default_servings from public.household $$,
-  $$ values ('Foyer A', 2::smallint) $$,
+  $$ select name, people_count from public.household $$,
+  $$ values ('Foyer A', 5::smallint) $$,
   'Les tentatives de B n''ont ni modifié ni supprimé le foyer de A'
 );
 select results_eq(
@@ -150,8 +154,8 @@ select results_eq(
 );
 
 select pg_temp.sign_in('00000000-0000-0000-0000-00000000000c');
-update public.household set default_servings = 3;
-select is((select default_servings from public.household), 3::smallint, 'Un membre peut changer les portions par défaut');
+update public.household set people_count = 3;
+select is((select people_count from public.household), 3::smallint, 'Un membre peut changer le nombre de personnes');
 
 -- ---------------------------------------------------------------------------
 -- Sans être connecté : aucun accès
