@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   carriedOverLabel,
+  groupMealsByDay,
+  mealSubtitle,
   mealWhen,
   menuDishState,
   menuDishSubtitle,
@@ -10,6 +12,7 @@ import {
   nextMenuDishState,
   numberMenuDishes,
   pickCurrentMenu,
+  splitOptions,
   withMealEaten,
   withMenuDishState,
   type Meal,
@@ -139,5 +142,60 @@ describe("withMenuDishState and withMealEaten", () => {
     const dish = withMealEaten(lasagnes(null, [first, meal(2)]), first.id, true, now);
     expect(dish.cookedAt).toBe(now);
     expect(menuDishSubtitle(dish)).toBe("4 portions · 2 restantes");
+  });
+});
+
+describe("groupMealsByDay", () => {
+  const menu = {
+    id: "p1",
+    startDate: "2026-10-24",
+    lengthDays: 7,
+    dishes: [
+      {
+        id: "b1",
+        dishId: "l",
+        name: "Lasagnes (1)",
+        dishName: "Lasagnes",
+        dishServings: 4,
+        dishArchived: false,
+        cookedAt: null,
+        carriedOver: false,
+        meals: [
+          { id: "m1", servings: 2, date: null, slot: null, eaten: false },
+          { id: "m2", servings: 2, date: "2026-10-27", slot: "dinner" as const, eaten: false },
+        ],
+      },
+    ],
+  };
+
+  it("should list the meals to place first, then every day of the menu even when empty", () => {
+    const groups = groupMealsByDay(menu, "2026-10-25");
+    expect(groups).toHaveLength(8);
+    expect(groups[0]).toMatchObject({ date: null, label: "À placer" });
+    expect(groups[0].meals.map((item) => item.id)).toEqual(["m1"]);
+    expect(groups[1]).toMatchObject({ label: "samedi 24 oct.", meals: [] });
+    expect(groups[2]).toMatchObject({ label: "dimanche 25 oct. · aujourd’hui", isToday: true });
+    expect(groups[4].meals).toMatchObject([{ id: "m2", name: "Lasagnes (1)", toCook: true }]);
+  });
+});
+
+describe("mealSubtitle", () => {
+  it("should add the slot when the meal has one", () => {
+    expect(mealSubtitle({ servings: 2, slot: "dinner" })).toBe("2 portions · soir");
+    expect(mealSubtitle({ servings: 1, slot: null })).toBe("1 portion");
+  });
+});
+
+describe("splitOptions", () => {
+  it("should offer 1 + 1 when the meal has 2 servings", () => {
+    expect(splitOptions(2)).toEqual([{ label: "1 + 1", moved: 1 }]);
+  });
+
+  it("should offer every split when the meal has 3 servings", () => {
+    expect(splitOptions(3).map((option) => option.label)).toEqual(["2 + 1", "1 + 2"]);
+  });
+
+  it("should offer nothing when the meal has 1 serving", () => {
+    expect(splitOptions(1)).toEqual([]);
   });
 });

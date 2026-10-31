@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useOptimistic, useState, useTransition } from "react";
 
@@ -117,15 +117,22 @@ export function MenuDishDetails({ dish, menuId }: { dish: MenuDish; menuId: stri
                 >
                   <EatenBox eaten={meal.eaten} />
                 </button>
-                <span className="flex min-w-0 flex-1 flex-col gap-0.5 py-3 pr-4">
-                  <span className={cn("font-semibold", meal.eaten && "text-muted-foreground line-through")}>
-                    {portionsLabel(meal.servings)}
+                <Link
+                  href={`/menu/repas/${meal.id}?depuis=plat`}
+                  className="flex min-w-0 flex-1 items-center gap-3 self-stretch py-3 pr-4"
+                >
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span className={cn("font-semibold", meal.eaten && "text-muted-foreground line-through")}>
+                      {portionsLabel(meal.servings)}
+                    </span>
+                    <span className="text-sm text-muted-foreground">{capitalize(mealWhen(meal))}</span>
                   </span>
-                  <span className="text-sm text-muted-foreground">{capitalize(mealWhen(meal))}</span>
-                </span>
+                  <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
+                </Link>
               </li>
             ))}
           </ul>
+          <p className="text-sm text-muted-foreground">Touche un repas pour choisir son jour ou le séparer.</p>
         </section>
 
         {!optimistic.dishArchived && (

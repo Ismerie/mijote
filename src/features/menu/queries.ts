@@ -102,3 +102,18 @@ export async function getMenuIdOfMenuDish(householdId: string, menuDishId: strin
   if (error) throw error;
   return data?.menu_id ?? null;
 }
+
+// Menu d'un repas, pour ouvrir sa fiche (#29).
+export async function getMenuIdOfMeal(householdId: string, mealId: string): Promise<string | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("meal")
+    .select("menu_dish (menu_id)")
+    .eq("household_id", householdId)
+    .eq("id", mealId)
+    .maybeSingle();
+
+  if (error?.code === "22P02") return null;
+  if (error) throw error;
+  return (data?.menu_dish as unknown as { menu_id: string } | null)?.menu_id ?? null;
+}

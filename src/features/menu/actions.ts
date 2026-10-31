@@ -7,7 +7,7 @@ import { getCurrentHousehold } from "@/features/household/current-household";
 import { createClient } from "@/lib/supabase/server";
 
 import { lastShoppingDay, todayInParis } from "./dates";
-import type { MenuDishState } from "./menu";
+import { isMealSlot, type MealSlot, type MenuDishState } from "./menu";
 import { MAX_TIMES, validateAdditions, type Addition } from "./menu-fields";
 
 type Result = { error?: string };
@@ -71,4 +71,41 @@ export async function removeMenuDish(menuDishId: string, menuId: string): Promis
 
   revalidatePath("/", "layout");
   redirect(`/?menu=${menuId}`);
+}
+
+// Place un repas sur un jour et un moment, tous deux facultatifs (#29).
+export async function placeMeal(mealId: string, date: string | null, slot: MealSlot | null): Promise<Result> {
+  if (slot !== null && !isMealSlot(slot)) return { error: FAILED };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("place_meal", { p_meal_id: mealId, p_date: date, p_slot: slot });
+  if (error?.message.includes("date_outside_menu")) return { error: "Ce jour ne fait pas partie du menu." };
+  if (error) return { error: FAILED };
+
+  revalidatePath("/", "layout");
+  return {};
+}
+
+// « Séparer ce repas » : servings portions partent dans un nouveau repas sans jour (#29).
+export async function splitMeal(mealId: string, servings: number): Promise<Result> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("split_meal", { p_meal_id: mealId, p_servings: servings });
+  if (error) return { error: FAILED };
+
+  revalidatePath("/", "layout");
+  return {};
+}
+
+// « Retirer ce repas du menu », puis retour à l'écran d'où on vient (#29) : la fiche du plat au menu
+// s'il a encore des repas, sinon la vue Par jour.
+export async function removeMeal(mealId: string, menuId: string, fromMenuDishId: string | null): Promise<Result> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("remove_meal", { p_meal_id: mealId });
+  if (error) return { error: FAILED };
+
+  revalidatePath("/", "layout");
+  if (fromMenuDishId) {
+    const { data } = await supabase.from("menu_dish").select("id").eq("id", fromMenuDishId).maybeSingle();
+    if (data) redirect(`/menu/plat/${fromMenuDishId}`);
+  }
+  redirect(`/?menu=${menuId}&vue=jour`);
 }

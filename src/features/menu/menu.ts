@@ -1,4 +1,4 @@
-import { capitalize, lastDay, lengthLabel, shortDay } from "./dates";
+import { addDays, capitalize, lastDay, lengthLabel, longDate, shortDay } from "./dates";
 import { portionsLabel } from "./servings";
 
 // Moments d'un repas (enum meal_slot), avec leurs noms affichés.
@@ -148,4 +148,59 @@ export function withMealEaten<T extends Pick<MenuDish, "cookedAt" | "meals">>(di
     cookedAt: eaten ? (dish.cookedAt ?? now) : dish.cookedAt,
     meals: dish.meals.map((meal) => (meal.id === mealId ? { ...meal, eaten } : meal)),
   };
+}
+
+// Un repas avec ce qu'il faut savoir de sa fournée, pour la vue Par jour (#29).
+export type MealItem = Meal & {
+  menuDishId: string;
+  name: string;
+  toCook: boolean;
+  carriedLabel: string | null;
+};
+
+// Un groupe de la vue Par jour : « À placer » (date null), puis chaque jour du menu.
+export type DayGroup = { date: string | null; label: string; isToday: boolean; meals: MealItem[] };
+
+// « À placer » en haut, puis tous les jours du menu, même vides, avec leurs repas dans l'ordre du menu.
+export function groupMealsByDay(menu: Menu, today: string): DayGroup[] {
+  const items: MealItem[] = menu.dishes.flatMap((dish) =>
+    dish.meals.map((meal) => ({
+      ...meal,
+      menuDishId: dish.id,
+      name: dish.name,
+      toCook: !dish.cookedAt,
+      carriedLabel: carriedOverLabel(dish),
+    })),
+  );
+  const days = Array.from({ length: menu.lengthDays }, (_, index) => addDays(menu.startDate, index));
+  return [
+    { date: null, label: "À placer", isToday: false, meals: items.filter((item) => item.date === null) },
+    ...days.map((day) => ({
+      date: day,
+      label: day === today ? `${longDate(day)} · aujourd’hui` : longDate(day),
+      isToday: day === today,
+      meals: items.filter((item) => item.date === day),
+    })),
+  ];
+}
+
+// Sous-titre d'un repas dans Par jour : « 2 portions · soir ».
+export function mealSubtitle(meal: Pick<Meal, "servings" | "slot">): string {
+  return portionsLabel(meal.servings) + (meal.slot ? ` · ${slotLabel(meal.slot).toLowerCase()}` : "");
+}
+
+// Choix de « Séparer ce repas » : pour 3 portions, « 2 + 1 » et « 1 + 2 » ; moved = portions du nouveau repas.
+export function splitOptions(servings: number): { label: string; moved: number }[] {
+  return Array.from({ length: servings - 1 }, (_, index) => {
+    const moved = index + 1;
+    return { label: `${servings - moved} + ${moved}`, moved };
+  });
+}
+
+// Jours proposés dans la fiche repas : « Sam. 17 », « Dim. 18 »…
+export function menuDays(menu: MenuPeriod): { date: string; label: string }[] {
+  return Array.from({ length: menu.lengthDays }, (_, index) => {
+    const date = addDays(menu.startDate, index);
+    return { date, label: capitalize(shortDay(date)) };
+  });
 }
