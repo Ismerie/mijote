@@ -1,5 +1,7 @@
 import { isAisle, type Aisle } from "@/features/ingredient/aisles";
 import { formatNumber } from "@/features/ingredient/format";
+import { parseDecimal } from "@/lib/decimal";
+import { MAX_INGREDIENT_NAME_LENGTH } from "@/features/ingredient/ingredient-fields";
 import { DEFAULT_UNIT, isUnit, type Unit } from "@/features/ingredient/units";
 
 import type { Dish } from "./dish";
@@ -10,7 +12,6 @@ export const MIN_SERVINGS = 1;
 export const MAX_SERVINGS = 50;
 export const DEFAULT_SERVINGS = 4;
 export const MAX_RECIPE_LENGTH = 10000;
-export const MAX_INGREDIENT_NAME_LENGTH = 80;
 const MAX_QUANTITY = 999999;
 const MAX_MACRO = 9999;
 
@@ -71,13 +72,6 @@ export function dishToFormValues(dish: Dish): DishFormValues {
     fat: text(dish.fat),
     lines: dish.ingredients.map((line) => ({ name: line.name, quantity: text(line.quantity), unit: line.unit })),
   };
-}
-
-// « 1,5 » ou « 1.5 » → 1.5 ; vide → null ; illisible → NaN.
-export function parseDecimal(text: string): number | null {
-  const trimmed = text.trim().replace(",", ".");
-  if (!trimmed) return null;
-  return /^\d+(\.\d+)?$/.test(trimmed) ? Number(trimmed) : Number.NaN;
 }
 
 // Lit le formulaire envoyé : les lignes d'ingrédients arrivent en JSON dans le champ caché « lines ».

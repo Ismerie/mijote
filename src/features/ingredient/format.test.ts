@@ -25,21 +25,21 @@ describe("describePurchase", () => {
 
   it("should describe a pack with its name and size when bought in packs", () => {
     expect(describePurchase({ purchaseMode: "pack", packName: "boîte", packSize: 400, packUnit: "g" })).toBe(
-      "boîte de 400 g",
+      "Boîte de 400 g",
     );
   });
 
   it("should count pieces when a pack holds pieces", () => {
     expect(describePurchase({ purchaseMode: "pack", packName: "boîte", packSize: 6, packUnit: "piece" })).toBe(
-      "boîte de 6 pièces",
+      "Boîte de 6 pièces",
     );
   });
 
   it("should say by weight when bought by weight", () => {
-    expect(describePurchase({ purchaseMode: "weight", ...base })).toBe("au poids");
+    expect(describePurchase({ purchaseMode: "weight", ...base })).toBe("Au poids ou au volume");
   });
 
   it("should say in pieces when bought by the piece", () => {
-    expect(describePurchase({ purchaseMode: "piece", ...base })).toBe("en pièces");
+    expect(describePurchase({ purchaseMode: "piece", ...base })).toBe("À la pièce");
   });
 });
