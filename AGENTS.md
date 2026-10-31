@@ -22,6 +22,12 @@ Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, shadcn/ui (`src/c
 - `src/features/<domaine>` : le métier (composants, Server Actions, requêtes, types, logique). Domaines : `auth`, `household`, `invitation`, puis `dish`, `ingredient`, `menu`, `groceries`. Nouveau domaine = nouveau dossier ici.
 - `src/lib` : clients Supabase (`src/lib/supabase`) et utilitaires partagés entre domaines.
 
+## Interface
+
+- Tout écran ou composant visible suit la maquette : `docs/maquette/` (une capture par écran dans `ecrans/`, tableau écran → ticket dans le `README.md`). La lire avant de coder une interface.
+- Le ticket fait foi sur le comportement et le périmètre ; la maquette, sur la disposition et les textes. En cas de contradiction, le signaler dans la PR.
+- Composants shadcn/ui et couleurs du thème, pas de styles recopiés de la source de la maquette.
+
 ## Langue
 
 - Code en anglais : tables, colonnes, fonctions, variables, composants, dossiers.
