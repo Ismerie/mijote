@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "L'encyclopédie de plats, le planning et la liste de courses du foyer.",
     lang: "fr",
     start_url: "/",
-    display: "standalone",
+    display: "fullscreen",
     background_color: "#FAF8F4",
     theme_color: "#2E6A4C",
     icons: [
