@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 export type CurrentHousehold = {
   id: string;
   name: string;
-  defaultServings: number;
+  peopleCount: number;
   role: "admin" | "member";
   firstName: string;
 };
@@ -22,18 +22,18 @@ export const getCurrentHousehold = cache(async (): Promise<CurrentHousehold | nu
   // Un compte n'appartient qu'à un seul foyer en V1.
   const { data, error } = await supabase
     .from("member")
-    .select("role, first_name, household (id, name, default_servings)")
+    .select("role, first_name, household (id, name, people_count)")
     .eq("user_id", user.id)
     .maybeSingle();
 
   if (error) throw error;
   if (!data?.household) return null;
 
-  const household = data.household as unknown as { id: string; name: string; default_servings: number };
+  const household = data.household as unknown as { id: string; name: string; people_count: number };
   return {
     id: household.id,
     name: household.name,
-    defaultServings: household.default_servings,
+    peopleCount: household.people_count,
     role: data.role,
     firstName: data.first_name,
   };

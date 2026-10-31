@@ -8,11 +8,11 @@ import { Label } from "@/components/ui/label";
 
 import { createHousehold } from "./actions";
 import {
-  DEFAULT_SERVINGS,
+  DEFAULT_PEOPLE_COUNT,
   MAX_FIRST_NAME_LENGTH,
   MAX_HOUSEHOLD_NAME_LENGTH,
-  MAX_SERVINGS,
-  MIN_SERVINGS,
+  MAX_PEOPLE_COUNT,
+  MIN_PEOPLE_COUNT,
 } from "./household-fields";
 
 export function CreateHouseholdForm() {
@@ -50,22 +50,22 @@ export function CreateHouseholdForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="defaultServings">Portions par défaut</Label>
+        <Label htmlFor="peopleCount">Nombre de personnes</Label>
         <Input
-          id="defaultServings"
-          name="defaultServings"
+          id="peopleCount"
+          name="peopleCount"
           type="number"
           inputMode="numeric"
-          min={MIN_SERVINGS}
-          max={MAX_SERVINGS}
+          min={MIN_PEOPLE_COUNT}
+          max={MAX_PEOPLE_COUNT}
           step={1}
           required
-          defaultValue={fields?.defaultServings ?? DEFAULT_SERVINGS}
-          aria-describedby="servings-hint"
+          defaultValue={fields?.peopleCount ?? DEFAULT_PEOPLE_COUNT}
+          aria-describedby="people-count-hint"
           className="h-11 w-24 bg-white"
         />
-        <p id="servings-hint" className="text-sm text-[#7A3219]/70">
-          Le nombre de parts prévu pour chaque repas. Tu pourras le changer plus tard.
+        <p id="people-count-hint" className="text-sm text-[#7A3219]/70">
+          Sert à découper chaque recette en repas. Tu pourras le changer plus tard.
         </p>
       </div>
 
