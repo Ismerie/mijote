@@ -1,0 +1,1310 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Mijote, prototype mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2E6A4C}a:hover{color:#1F4D36}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left}
+input,select,textarea{font:inherit;color:#1E1C19}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FAF8F4; color: #1E1C19; font-family: Geist, system-ui, sans-serif; font-size: 15px; line-height: 1.4; overflow: hidden">
+
+<!-- ===================== MENU (accueil) ===================== -->
+<sc-if value="{{isMenu}}" hint-placeholder-val="{{true}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 8px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{prevPeriod}}" aria-label="Menu précédent" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; color: {{prevColor}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center">
+<h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.02em">{{periodTitle}}</h1>
+<p style="margin: 0; color: #4A453E; font-size: 14px">{{periodLabel}}</p>
+<p style="margin: 0; color: #6B655C; font-size: 13px">{{menuSummary}}</p>
+</div>
+<button type="button" onClick="{{nextPeriod}}" aria-label="Menu suivant" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+</header>
+<sc-if value="{{hasPeriod}}" hint-placeholder-val="{{true}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<div style="padding: 4px 20px 12px; display: flex; gap: 8px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #EFEBE3; border-radius: 10px; padding: 3px; flex: 1">
+<button type="button" onClick="{{viewList}}" style="height: 36px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; background: {{listBg}}; color: {{listColor}}">En liste</button>
+<button type="button" onClick="{{viewDays}}" style="height: 36px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; background: {{daysBg}}; color: {{daysColor}}">Par jour</button>
+</div>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{isListView}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{menuItems}}" as="item" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 10px 12px 10px 10px">
+<button type="button" onClick="{{item.toggle}}" aria-label="{{item.boxLabel}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex: none">
+<span style="width: 24px; height: 24px; border-radius: 7px; border: 2px solid {{item.boxBorder}}; background: {{item.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{item.eaten}}" hint-placeholder-val="{{false}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+</button>
+<button type="button" onClick="{{item.open}}" style="flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 4px">
+<span style="font-size: 16px; font-weight: 600; color: {{item.nameColor}}; text-decoration: {{item.nameDeco}}">{{item.name}}</span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; color: #6B655C">
+<span>{{item.portions}}</span>
+<span aria-hidden="true">·</span>
+<span style="color: {{item.whenColor}}">{{item.when}}</span>
+<sc-if value="{{item.carried}}" hint-placeholder-val="{{false}}">
+<span style="background: #F6E7D6; color: #7A4210; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">Reporté</span>
+</sc-if>
+</span>
+</button>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9387" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{isDayView}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{isMoving}}" hint-placeholder-val="{{false}}">
+<div style="position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px; background: #1F4D36; color: #FFFFFF; border-radius: 12px; padding: 8px 8px 8px 14px">
+<span style="flex: 1; font-size: 14px; font-weight: 600">{{movingLabel}}</span>
+<button type="button" onClick="{{cancelMove}}" style="min-height: 40px; padding: 0 12px; border-radius: 10px; background: #FFFFFF; color: #1F4D36; font-weight: 600; font-size: 14px">Annuler</button>
+</div>
+</sc-if>
+<sc-if value="{{showDragHint}}" hint-placeholder-val="{{true}}">
+<p style="margin: 0; font-size: 13px; color: #6B655C">Glisse un repas sur un jour, ou touche ses poignées puis le jour voulu.</p>
+</sc-if>
+<sc-for list="{{dayGroups}}" as="group" hint-placeholder-count="4">
+<section onDragOver="{{group.over}}" onDrop="{{group.drop}}" style="display: flex; flex-direction: column; gap: 6px; border-radius: 14px; padding: 6px; border: 1.5px dashed {{group.dropBorder}}; background: {{group.dropBg}}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px; padding: 0 4px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: {{group.labelColor}}">{{group.label}}</h2>
+<sc-if value="{{group.canPlace}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{group.place}}" style="min-height: 36px; padding: 0 12px; border-radius: 10px; background: #2E6A4C; color: #FFFFFF; font-size: 13px; font-weight: 600">Placer ici</button>
+</sc-if>
+</div>
+<sc-for list="{{group.items}}" as="item" hint-placeholder-count="1">
+<div draggable="true" onDragStart="{{item.dragStart}}" onDragEnd="{{item.dragEnd}}" style="display: flex; align-items: center; gap: 6px; background: #FFFFFF; border: 1.5px solid {{item.moveBorder}}; border-radius: 14px; padding: 4px 4px 4px 6px">
+<button type="button" onClick="{{item.toggle}}" aria-label="{{item.boxLabel}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex: none">
+<span style="width: 24px; height: 24px; border-radius: 7px; border: 2px solid {{item.boxBorder}}; background: {{item.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{item.eaten}}" hint-placeholder-val="{{false}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+</button>
+<button type="button" onClick="{{item.open}}" style="flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+<span style="font-size: 16px; font-weight: 600; color: {{item.nameColor}}; text-decoration: {{item.nameDeco}}">{{item.name}}</span>
+<span style="font-size: 13px; color: #6B655C">{{item.portions}} · {{item.slotLabel}}</span>
+</button>
+<button type="button" onClick="{{item.startMove}}" aria-label="{{item.moveLabel}}" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; color: #6B655C; cursor: grab">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>
+</button>
+</div>
+</sc-for>
+<sc-if value="{{group.empty}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 2px 6px 6px; font-size: 13px; color: #9A9387">Rien de prévu</p>
+</sc-if>
+</section>
+</sc-for>
+</div>
+</sc-if>
+<button type="button" onClick="{{openAddPick}}" style="margin-top: 6px; min-height: 52px; border-radius: 14px; border: 1.5px dashed #BDB5A8; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: #2E6A4C">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+Ajouter un plat au menu
+</button>
+</main>
+</div>
+</sc-if>
+<sc-if value="{{noPeriod}}" hint-placeholder-val="{{false}}">
+<main style="flex: 1; padding: 40px 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center">
+<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9A9387" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5"></rect><path d="M8 3v4M16 3v4M4 10h16M12 13v4M10 15h4"></path></svg>
+<p style="margin: 0; font-size: 17px; font-weight: 600">Pas encore de menu ici</p>
+<p style="margin: 0; color: #6B655C">Prépare le prochain menu : choisis sa durée, reporte ce qui n'a pas été mangé, puis ajoute tes plats.</p>
+<button type="button" onClick="{{openPrep}}" style="margin-top: 6px; height: 52px; padding: 0 24px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">Préparer le prochain menu</button>
+</main>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- ===================== PRÉPARER UN MENU ===================== -->
+<sc-if value="{{isPrep}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Préparer le menu</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 24px">
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Durée</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{prepDurations}}" as="c" hint-placeholder-count="2">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 48px; border-radius: 12px; font-size: 15px; font-weight: 600; text-align: center; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 14px; color: #4A453E">{{prepRange}}</p>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Repas pas mangés à reporter</h2>
+<p style="margin: 0; font-size: 13px; color: #6B655C">Ils sont déjà achetés : ils passent dans le nouveau menu sans compter dans les courses. Décoche ceux que tu ne veux pas garder.</p>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; overflow: hidden">
+<sc-for list="{{prepCarry}}" as="l" hint-placeholder-count="4">
+<button type="button" onClick="{{l.toggle}}" aria-pressed="{{l.checked}}" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 52px; border-top: 1px solid {{l.sep}}">
+<span style="width: 24px; height: 24px; flex: none; border-radius: 7px; border: 2px solid {{l.boxBorder}}; background: {{l.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{l.checked}}" hint-placeholder-val="{{true}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+<span style="font-weight: 600">{{l.name}}</span>
+<span style="font-size: 12px; color: #6B655C">{{l.sub}}</span>
+</span>
+</button>
+</sc-for>
+<sc-if value="{{prepNoCarry}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 14px; color: #6B655C; font-size: 14px">Tout a été mangé, rien à reporter.</p>
+</sc-if>
+</div>
+</section>
+</main>
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4">
+<button type="button" onClick="{{confirmPrep}}" style="width: 100%; height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">Créer le menu</button>
+</div>
+</div>
+</sc-if>
+
+<!-- ===================== AJOUTER : choisir un plat ===================== -->
+<sc-if value="{{isAddPick}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Quels plats ajouter ?</h1>
+</header>
+<div style="padding: 0 20px 12px">
+<label class="sr" for="add-search">Chercher un plat</label>
+<div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #DCD6CB; border-radius: 12px; padding: 0 12px; height: 46px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg>
+<input id="add-search" type="search" placeholder="Chercher un plat" value="{{search}}" onChange="{{onSearch}}" style="flex: 1; border: 0; outline: none; background: transparent; font-size: 16px">
+</div>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{platList}}" as="p" hint-placeholder-count="5">
+<button type="button" onClick="{{p.pick}}" aria-pressed="{{p.selected}}" style="display: flex; align-items: center; gap: 12px; background: {{p.selBg}}; border: 1.5px solid {{p.selBorder}}; border-radius: 14px; padding: 12px 14px; min-height: 60px">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 600">{{p.name}}</span>
+<span style="font-size: 13px; color: #6B655C">{{p.sub}}</span>
+</span>
+<sc-if value="{{p.inMenu}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; font-weight: 600; color: #2E6A4C; background: #E3EEE7; border-radius: 6px; padding: 2px 8px">Déjà au menu</span>
+</sc-if>
+<span style="width: 24px; height: 24px; flex: none; border-radius: 7px; border: 2px solid {{p.boxBorder}}; background: {{p.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{p.selected}}" hint-placeholder-val="{{false}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+</button>
+</sc-for>
+<sc-if value="{{platsEmpty}}" hint-placeholder-val="{{false}}">
+<p style="margin: 16px 0; text-align: center; color: #6B655C">Aucun plat ne correspond.</p>
+</sc-if>
+</main>
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{false}}">
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4">
+<button type="button" onClick="{{openRecap}}" style="width: 100%; height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">{{selCta}}</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- ===================== AJOUTER : récapitulatif (plusieurs plats) ===================== -->
+<sc-if value="{{isAddRecap}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Combien de fois la recette ?</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0 0 6px; font-size: 13px; color: #6B655C">{{recapIntro}}</p>
+<sc-for list="{{selItems}}" as="it" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 8px 8px 8px 14px">
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">{{it.name}}</span><span style="font-size: 13px; color: #6B655C">{{it.calc}}</span></span>
+<button type="button" onClick="{{it.dec}}" aria-label="{{it.decLabel}}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #DCD6CB; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>
+</button>
+<span style="font-size: 18px; font-weight: 700; min-width: 32px; text-align: center">×{{it.times}}</span>
+<button type="button" onClick="{{it.inc}}" aria-label="{{it.incLabel}}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #DCD6CB; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+</button>
+</div>
+</sc-for>
+<p style="margin: 8px 0 0; font-size: 13px; color: #6B655C">Chaque repas arrive au menu sans jour. Touche-le ensuite pour choisir quand vous le mangez.</p>
+</main>
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4; display: flex; flex-direction: column; gap: 8px">
+<button type="button" onClick="{{confirmMulti}}" style="height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">{{recapCta}}</button>
+<p style="margin: 0; font-size: 13px; color: #6B655C; text-align: center">Leurs ingrédients arrivent dans la liste de courses.</p>
+</div>
+</div>
+</sc-if>
+
+<!-- ===================== UN REPAS DU MENU : jour, moment ===================== -->
+<sc-if value="{{isMeal}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">{{meal.name}}</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px">
+<span style="font-weight: 600">{{meal.portions}}</span>
+<span style="font-size: 13px; color: #6B655C">{{meal.batch}}</span>
+<a href="#" onClick="{{meal.openRecipe}}" style="font-size: 14px; font-weight: 600; min-height: 32px; display: flex; align-items: center">Voir la recette</a>
+</div>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Jour <span style="font-weight: 400; color: #6B655C">(facultatif)</span></h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{dayChips}}" as="c" hint-placeholder-count="8">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 40px; padding: 0 14px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Moment <span style="font-weight: 400; color: #6B655C">(facultatif)</span></h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{slotChips}}" as="c" hint-placeholder-count="5">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 40px; padding: 0 14px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+</section>
+</main>
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4; display: flex; flex-direction: column; gap: 4px">
+<button type="button" onClick="{{back}}" style="height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">OK</button>
+<button type="button" onClick="{{removeMeal}}" style="min-height: 44px; font-weight: 600; color: #A3341F; text-align: center">Retirer ce repas du menu</button>
+</div>
+</div>
+</sc-if>
+
+<!-- ===================== PLATS (liste) ===================== -->
+<sc-if value="{{isPlats}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 24px 20px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Plats</h1>
+<button type="button" onClick="{{openNewForm}}" style="min-height: 44px; padding: 0 14px; border-radius: 12px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; display: flex; align-items: center; gap: 6px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+Nouveau
+</button>
+</header>
+<div style="padding: 0 20px 12px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #EFEBE3; border-radius: 10px; padding: 3px">
+<button type="button" aria-pressed="true" style="height: 36px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; background: #FFFFFF; color: #1E1C19">Plats</button>
+<button type="button" onClick="{{openIngs}}" style="height: 36px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; background: transparent; color: #6B655C">Ingrédients</button>
+</div>
+</div>
+<div style="padding: 0 20px 12px">
+<label class="sr" for="plats-search">Chercher un plat</label>
+<div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #DCD6CB; border-radius: 12px; padding: 0 12px; height: 46px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg>
+<input id="plats-search" type="search" placeholder="Chercher un plat" value="{{search}}" onChange="{{onSearch}}" style="flex: 1; border: 0; outline: none; background: transparent; font-size: 16px">
+</div>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{platList}}" as="p" hint-placeholder-count="6">
+<button type="button" onClick="{{p.open}}" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px; min-height: 60px">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 600">{{p.name}}</span>
+<span style="font-size: 13px; color: #6B655C">{{p.sub}}</span>
+</span>
+<sc-if value="{{p.inMenu}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; font-weight: 600; color: #2E6A4C; background: #E3EEE7; border-radius: 6px; padding: 2px 8px">Au menu</span>
+</sc-if>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9387" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+</sc-for>
+<sc-if value="{{platsEmpty}}" hint-placeholder-val="{{false}}">
+<p style="margin: 16px 0; text-align: center; color: #6B655C">Aucun plat ne correspond.</p>
+</sc-if>
+</main>
+</div>
+</sc-if>
+
+<!-- ===================== INGRÉDIENTS (liste) ===================== -->
+<sc-if value="{{isIngs}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 24px 20px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Ingrédients</h1>
+<button type="button" onClick="{{newIng}}" style="min-height: 44px; padding: 0 14px; border-radius: 12px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; display: flex; align-items: center; gap: 6px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+Nouveau
+</button>
+</header>
+<div style="padding: 0 20px 12px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #EFEBE3; border-radius: 10px; padding: 3px">
+<button type="button" onClick="{{tabPlats}}" style="height: 36px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; background: transparent; color: #6B655C">Plats</button>
+<button type="button" aria-pressed="true" style="height: 36px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 600; background: #FFFFFF; color: #1E1C19">Ingrédients</button>
+</div>
+</div>
+<div style="padding: 0 20px 12px">
+<label class="sr" for="ings-search">Chercher un ingrédient</label>
+<div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #DCD6CB; border-radius: 12px; padding: 0 12px; height: 46px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg>
+<input id="ings-search" type="search" placeholder="Chercher un ingrédient" value="{{search}}" onChange="{{onSearch}}" style="flex: 1; border: 0; outline: none; background: transparent; font-size: 16px">
+</div>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<sc-for list="{{ingGroups}}" as="g" hint-placeholder-count="4">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6B655C">{{g.rayon}}</h2>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; overflow: hidden">
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+<button type="button" onClick="{{it.open}}" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 14px; min-height: 56px; border-top: 1px solid {{it.sep}}">
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+<span style="font-weight: 600">{{it.name}}</span>
+<span style="font-size: 12px; color: #6B655C">{{it.sub}}</span>
+</span>
+<sc-if value="{{it.stock}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; font-weight: 600; color: #1F4D36; background: #E3EEE7; border-radius: 6px; padding: 2px 8px">En stock</span>
+</sc-if>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9387" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+</sc-for>
+</div>
+</section>
+</sc-for>
+<p style="margin: 0; font-size: 13px; color: #6B655C; text-align: center">Tu peux aussi en créer en écrivant la recette d'un plat.</p>
+</main>
+</div>
+</sc-if>
+
+<!-- ===================== UN INGRÉDIENT ===================== -->
+<sc-if value="{{isIng}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">{{ing.title}}</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="ing-name" style="font-size: 14px; font-weight: 600">Nom</label>
+<input id="ing-name" type="text" defaultValue="{{ing.name}}" onChange="{{ing.onName}}" placeholder="Ex. Coulis de tomates" style="height: 46px; border: 1px solid #DCD6CB; border-radius: 12px; padding: 0 12px; background: #FFFFFF; font-size: 16px">
+</div>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Rayon</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ingRayonChips}}" as="c" hint-placeholder-count="5">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 40px; padding: 0 12px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Comment tu l'achètes ?</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{buyChips}}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 40px; padding: 0 12px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{ing.isPack}}" hint-placeholder-val="{{false}}">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 72px 76px; gap: 6px; align-items: end">
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="ing-pack" style="font-size: 13px; color: #6B655C">Paquet</label><input id="ing-pack" type="text" defaultValue="{{ing.packName}}" onChange="{{ing.onPackName}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px; min-width: 0"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="ing-size" style="font-size: 13px; color: #6B655C">Contient</label><input id="ing-size" type="text" inputMode="decimal" defaultValue="{{ing.packSize}}" onChange="{{ing.onPackSize}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 8px; background: #FFFFFF; font-size: 15px; min-width: 0"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="ing-unit" style="font-size: 13px; color: #6B655C">Unité</label>
+<select id="ing-unit" defaultValue="{{ing.packUnit}}" onChange="{{ing.onPackUnit}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 6px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="pièce">pièce</option>
+</select></div>
+</div>
+<p style="margin: 0; font-size: 13px; color: #6B655C">{{ing.packHint}}</p>
+</sc-if>
+</section>
+<button type="button" onClick="{{ing.toggleStock}}" aria-pressed="{{ing.stock}}" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px; min-height: 64px">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600">Toujours en stock</span>
+<span style="font-size: 13px; color: #6B655C">Il n'apparaît jamais dans la liste de courses.</span>
+</span>
+<span aria-hidden="true" style="width: 48px; height: 28px; flex: none; border-radius: 14px; background: {{ing.switchBg}}; display: flex; align-items: center; padding: 3px; box-sizing: border-box; justify-content: {{ing.switchSide}}">
+<span style="width: 22px; height: 22px; border-radius: 11px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(30, 28, 25, 0.25)"></span>
+</span>
+</button>
+<section style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Utilisé dans</h2>
+<p style="margin: 0; color: #4A453E">{{ing.usedIn}}</p>
+</section>
+<sc-if value="{{ing.canDelete}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{ing.remove}}" style="min-height: 44px; font-weight: 600; color: #A3341F; text-align: left">Supprimer cet ingrédient</button>
+</sc-if>
+<sc-if value="{{ing.cantDelete}}" hint-placeholder-val="{{true}}">
+<p style="margin: 0; font-size: 13px; color: #6B655C">Pour le supprimer, retire-le d'abord des plats qui l'utilisent.</p>
+</sc-if>
+</main>
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4">
+<button type="button" onClick="{{back}}" style="width: 100%; height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">OK</button>
+</div>
+</div>
+</sc-if>
+
+<!-- ===================== FICHE D'UN PLAT ===================== -->
+<sc-if value="{{isPlat}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 0; display: flex; align-items: center; justify-content: space-between">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<button type="button" onClick="{{openEditForm}}" style="min-height: 44px; padding: 0 12px; font-weight: 600; color: #2E6A4C">Modifier</button>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 4px 20px 24px; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">{{plat.name}}</h1>
+<p style="margin: 0; color: #6B655C">{{plat.servings}}</p>
+</div>
+<button type="button" onClick="{{addFromPlat}}" style="height: 50px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; text-align: center">Ajouter au menu de la semaine</button>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Ingrédients</h2>
+<ul style="margin: 0; padding: 0; list-style: none; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px">
+<sc-for list="{{plat.ings}}" as="ing" hint-placeholder-count="6">
+<li style="display: flex; justify-content: space-between; gap: 12px; padding: 11px 14px; border-top: 1px solid {{ing.sep}}">
+<span>{{ing.name}}</span>
+<span style="color: #6B655C; white-space: nowrap">{{ing.qty}}</span>
+</li>
+</sc-for>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Recette</h2>
+<p style="margin: 0; white-space: pre-line; line-height: 1.55">{{plat.recette}}</p>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Macros par portion</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; text-align: center">
+<span style="font-size: 17px; font-weight: 700">{{plat.kcal}}</span><span style="font-size: 12px; color: #6B655C">kcal</span>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; text-align: center">
+<span style="font-size: 17px; font-weight: 700">{{plat.prot}}</span><span style="font-size: 12px; color: #6B655C">Protéines</span>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; text-align: center">
+<span style="font-size: 17px; font-weight: 700">{{plat.gluc}}</span><span style="font-size: 12px; color: #6B655C">Glucides</span>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; text-align: center">
+<span style="font-size: 17px; font-weight: 700">{{plat.lip}}</span><span style="font-size: 12px; color: #6B655C">Lipides</span>
+</div>
+</div>
+</section>
+</main>
+</div>
+</sc-if>
+
+<!-- ===================== FORMULAIRE D'UN PLAT ===================== -->
+<sc-if value="{{isForm}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Annuler" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">{{formTitle}}</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-name" style="font-size: 14px; font-weight: 600">Nom du plat</label>
+<input id="f-name" type="text" defaultValue="{{form.name}}" placeholder="Ex. Gratin dauphinois" style="height: 46px; border: 1px solid #DCD6CB; border-radius: 12px; padding: 0 12px; background: #FFFFFF; font-size: 16px">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-servings" style="font-size: 14px; font-weight: 600">Portions</label>
+<input id="f-servings" type="number" min="1" defaultValue="{{form.servings}}" style="height: 46px; border: 1px solid #DCD6CB; border-radius: 12px; padding: 0 12px; background: #FFFFFF; font-size: 16px">
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Ingrédients</h2>
+<sc-for list="{{form.ings}}" as="ing" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 62px 86px; gap: 6px">
+<label class="sr" for="{{ing.idName}}">Ingrédient</label>
+<input id="{{ing.idName}}" type="text" defaultValue="{{ing.name}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<label class="sr" for="{{ing.idQty}}">Quantité</label>
+<input id="{{ing.idQty}}" type="text" inputMode="decimal" defaultValue="{{ing.qty}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 8px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<label class="sr" for="{{ing.idUnit}}">Unité</label>
+<select id="{{ing.idUnit}}" defaultValue="{{ing.unit}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 6px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="pièce">pièce</option>
+<option value="boîte">boîte</option>
+<option value="c. à s.">c. à s.</option>
+</select>
+</div>
+</sc-for>
+
+<sc-if value="{{demoSuggest}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 62px 86px; gap: 6px">
+<label class="sr" for="f-new-ing">Nouvel ingrédient</label>
+<input id="f-new-ing" type="text" defaultValue="tom" style="height: 44px; border: 2px solid #2E6A4C; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<label class="sr" for="f-new-qty">Quantité</label>
+<input id="f-new-qty" type="text" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 8px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<label class="sr" for="f-new-unit">Unité</label>
+<select id="f-new-unit" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 6px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="pièce">pièce</option>
+<option value="boîte">boîte</option>
+</select>
+</div>
+<div role="listbox" aria-label="Ingrédients déjà connus" style="background: #FFFFFF; border: 1px solid #DCD6CB; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(30, 28, 25, 0.10)">
+<p style="margin: 0; padding: 8px 12px 4px; font-size: 12px; color: #6B655C">Déjà dans tes plats</p>
+<button type="button" onClick="{{pickTomates}}" style="width: 100%; min-height: 48px; padding: 6px 12px; display: flex; flex-direction: column; justify-content: center">
+<span style="font-weight: 600">Tomates</span><span style="font-size: 12px; color: #6B655C">Fruits et légumes · en pièces</span>
+</button>
+<button type="button" onClick="{{pickConcassees}}" style="width: 100%; min-height: 48px; padding: 6px 12px; display: flex; flex-direction: column; justify-content: center; border-top: 1px solid #EFEBE3">
+<span style="font-weight: 600">Tomates concassées</span><span style="font-size: 12px; color: #6B655C">Épicerie · boîte de 400 g</span>
+</button>
+<button type="button" onClick="{{startCreate}}" style="width: 100%; min-height: 48px; padding: 6px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #EFEBE3; color: #2E6A4C; font-weight: 600">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+Créer « tom » comme nouvel ingrédient
+</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{demoCreate}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; background: #FFFFFF; border: 1px solid #DCD6CB; border-radius: 14px; padding: 14px">
+<p style="margin: 0; font-weight: 600">Nouvel ingrédient : « tom »</p>
+<p style="margin: 0; font-size: 13px; color: #6B655C">Dans quel rayon on le trouve ? C'est demandé une seule fois, puis réutilisé partout.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{rayonChips}}" as="r" hint-placeholder-count="5">
+<button type="button" onClick="{{r.pick}}" style="min-height: 40px; padding: 0 12px; border-radius: 20px; border: 1.5px solid #DCD6CB; font-size: 14px; font-weight: 600">{{r.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{demoPicked}}" hint-placeholder-val="{{false}}">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 62px 86px; gap: 6px">
+<label class="sr" for="f-picked">Ingrédient</label>
+<input id="f-picked" type="text" defaultValue="{{demoName}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<label class="sr" for="f-picked-qty">Quantité</label>
+<input id="f-picked-qty" type="text" placeholder="Qté" style="height: 44px; border: 2px solid #2E6A4C; border-radius: 10px; padding: 0 8px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<label class="sr" for="f-picked-unit">Unité</label>
+<select id="f-picked-unit" defaultValue="{{demoUnit}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 6px; background: #FFFFFF; font-size: 15px; min-width: 0">
+<option value="g">g</option>
+<option value="ml">ml</option>
+<option value="pièce">pièce</option>
+<option value="boîte">boîte</option>
+</select>
+</div>
+</sc-if>
+
+<button type="button" onClick="{{startSuggest}}" style="min-height: 44px; border-radius: 12px; border: 1.5px dashed #BDB5A8; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: #2E6A4C">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+Ajouter un ingrédient
+</button>
+</section>
+<section style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-recette" style="font-size: 17px; font-weight: 700">Recette</label>
+<textarea id="f-recette" rows="6" defaultValue="{{form.recette}}" placeholder="Les étapes, en texte libre" style="border: 1px solid #DCD6CB; border-radius: 12px; padding: 10px 12px; background: #FFFFFF; font-size: 15px; line-height: 1.5; resize: vertical"></textarea>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Macros par portion <span style="font-weight: 400; font-size: 14px; color: #6B655C">(facultatif)</span></h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="f-kcal" style="font-size: 13px; color: #6B655C">Calories (kcal)</label><input id="f-kcal" type="text" inputMode="decimal" defaultValue="{{form.kcal}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="f-prot" style="font-size: 13px; color: #6B655C">Protéines (g)</label><input id="f-prot" type="text" inputMode="decimal" defaultValue="{{form.p}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="f-gluc" style="font-size: 13px; color: #6B655C">Glucides (g)</label><input id="f-gluc" type="text" inputMode="decimal" defaultValue="{{form.g}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="f-lip" style="font-size: 13px; color: #6B655C">Lipides (g)</label><input id="f-lip" type="text" inputMode="decimal" defaultValue="{{form.l}}" style="height: 44px; border: 1px solid #DCD6CB; border-radius: 10px; padding: 0 10px; background: #FFFFFF; font-size: 15px"></div>
+</div>
+</section>
+<sc-if value="{{canDelete}}" hint-placeholder-val="{{false}}">
+<section style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #E6E1D8; padding-top: 16px">
+<sc-if value="{{notConfirming}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{askDelete}}" style="min-height: 44px; font-weight: 600; color: #A3341F; text-align: left">Supprimer ce plat</button>
+</sc-if>
+<sc-if value="{{confirmingDelete}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; background: #FBEDEA; border-radius: 14px; padding: 14px">
+<p style="margin: 0; font-weight: 600">{{deleteTitle}}</p>
+<p style="margin: 0; font-size: 13px; color: #5E2A1F">{{deleteText}}</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button type="button" onClick="{{cancelDelete}}" style="min-height: 44px; border-radius: 12px; border: 1px solid #DCD6CB; background: #FFFFFF; font-weight: 600; text-align: center">Annuler</button>
+<button type="button" onClick="{{doDelete}}" style="min-height: 44px; border-radius: 12px; background: #A3341F; color: #FFFFFF; font-weight: 600; text-align: center">Supprimer</button>
+</div>
+</div>
+</sc-if>
+</section>
+</sc-if>
+</main>
+<div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4">
+<button type="button" onClick="{{back}}" style="width: 100%; height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">Enregistrer</button>
+</div>
+</div>
+</sc-if>
+
+<!-- ===================== COURSES ===================== -->
+<sc-if value="{{isCourses}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 24px 20px 12px; display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Courses</h1>
+<p style="margin: 0; color: #6B655C; font-size: 14px">{{coursesPeriod}} · {{coursesSummary}}</p>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 18px">
+<sc-for list="{{rayonGroups}}" as="g" hint-placeholder-count="4">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6B655C">{{g.rayon}}</h2>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; overflow: hidden">
+<sc-for list="{{g.items}}" as="l" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; border-top: 1px solid {{l.sep}}">
+<button type="button" onClick="{{l.toggle}}" aria-pressed="{{l.checked}}" style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 10px 4px 10px 14px; min-height: 56px">
+<span style="width: 24px; height: 24px; flex: none; border-radius: 7px; border: 2px solid {{l.boxBorder}}; background: {{l.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{l.checked}}" hint-placeholder-val="{{false}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+<span style="font-weight: 600; color: {{l.nameColor}}; text-decoration: {{l.nameDeco}}">{{l.name}}</span>
+<span style="font-size: 12px; color: #6B655C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{l.from}}</span>
+</span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 1px">
+<span style="font-weight: 600; white-space: nowrap; color: {{l.nameColor}}">{{l.qty}}</span>
+<span style="font-size: 11px; color: #6B655C; white-space: nowrap">{{l.qtySub}}</span>
+</span>
+</button>
+<button type="button" onClick="{{l.edit}}" aria-label="{{l.editLabel}}" style="width: 44px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; color: #6B655C">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+</button>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+<sc-if value="{{hasLines}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{finishCourses}}" style="min-height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; font-size: 16px; text-align: center">Courses terminées</button>
+<p style="margin: -8px 0 0; font-size: 13px; color: #6B655C; text-align: center">La liste est supprimée. Si tu ajoutes un plat ensuite, seuls ses ingrédients apparaîtront.</p>
+</sc-if>
+<sc-if value="{{noLines}}" hint-placeholder-val="{{false}}">
+<div style="padding: 32px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2E6A4C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg>
+<p style="margin: 0; font-size: 17px; font-weight: 600">{{emptyTitle}}</p>
+<p style="margin: 0; color: #6B655C">{{emptyText}}</p>
+</div>
+</sc-if>
+<sc-if value="{{hasStockSkipped}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 13px; color: #6B655C">{{stockNote}}</p>
+</sc-if>
+<sc-if value="{{hasCarried}}" hint-placeholder-val="{{true}}">
+<p style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #F6E7D6; color: #5E3410; font-size: 13px">{{carriedNote}}</p>
+</sc-if>
+</main>
+</div>
+</sc-if>
+
+<!-- ===================== FOYER ===================== -->
+<sc-if value="{{isFoyer}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 24px 20px 12px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Mon foyer</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 22px">
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Membres</h2>
+<ul style="margin: 0; padding: 0; list-style: none; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px">
+<li style="display: flex; align-items: center; gap: 12px; padding: 12px 14px">
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 18px; background: #E3EEE7; color: #1F4D36; display: flex; align-items: center; justify-content: center; font-weight: 700">I</span>
+<span style="flex: 1">Isme <span style="color: #6B655C">(toi)</span></span>
+</li>
+<li style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid #EFEBE3">
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 18px; background: #F6E7D6; color: #5E3410; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span>
+<span style="flex: 1">Alex</span>
+</li>
+</ul>
+<button type="button" onClick="{{openInvite}}" style="min-height: 48px; border-radius: 12px; border: 1.5px solid #2E6A4C; color: #2E6A4C; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M3 19c.8-3.2 3.2-5 6-5s5.2 1.8 6 5M18 8v6M15 11h6"></path></svg>
+Inviter quelqu'un
+</button>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Nombre de personnes</h2>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 10px 14px">
+<span style="font-size: 14px; color: #6B655C; flex: 1">Sert à découper chaque recette en repas</span>
+<div style="display: flex; align-items: center; gap: 10px">
+<button type="button" onClick="{{defDec}}" aria-label="Une personne de moins" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #DCD6CB; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>
+</button>
+<span style="font-size: 20px; font-weight: 700; min-width: 24px; text-align: center">{{defaultPortions}}</span>
+<button type="button" onClick="{{defInc}}" aria-label="Une personne de plus" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #DCD6CB; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+</button>
+</div>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Organisation des menus</h2>
+<div style="display: flex; flex-direction: column; gap: 14px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 600">Jour des courses</span>
+<span style="font-size: 13px; color: #6B655C">Chaque menu commence ce jour-là.</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{shopDayChips}}" as="c" hint-placeholder-count="7">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 40px; min-width: 44px; padding: 0 10px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #EFEBE3; padding-top: 12px">
+<span style="font-size: 14px; font-weight: 600">Durée d'un menu</span>
+<span style="font-size: 13px; color: #6B655C">Proposée quand tu prépares un nouveau menu.</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{durationChips}}" as="c" hint-placeholder-count="2">
+<button type="button" onClick="{{c.pick}}" aria-pressed="{{c.selected}}" style="min-height: 44px; border-radius: 12px; font-size: 14px; font-weight: 600; text-align: center; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.color}}">{{c.label}}</button>
+</sc-for>
+</div>
+</div>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700">Mon compte</h2>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px; color: #6B655C; font-size: 14px">[adresse email du compte]</div>
+<button type="button" style="min-height: 44px; font-weight: 600; color: #A3341F; text-align: left">Se déconnecter</button>
+</section>
+</main>
+</div>
+</sc-if>
+
+<!-- ===================== INVITER ===================== -->
+<sc-if value="{{isInvite}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<header style="padding: 16px 12px 8px; display: flex; align-items: center; gap: 4px">
+<button type="button" onClick="{{back}}" aria-label="Retour" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Inviter dans le foyer</h1>
+</header>
+<main style="flex: 1; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<p style="margin: 0; line-height: 1.5">Envoie ce lien à la personne. En l'ouvrant, elle crée son compte et rejoint ton foyer : mêmes plats, même menu, même liste de courses.</p>
+<div style="background: #FFFFFF; border: 1px solid #DCD6CB; border-radius: 12px; padding: 14px; font-size: 14px; word-break: break-all">mijote-pink.vercel.app/invitation/[code]</div>
+<button type="button" onClick="{{copyLink}}" style="height: 52px; border-radius: 14px; background: #2E6A4C; color: #FFFFFF; font-weight: 600; text-align: center">{{copyLabel}}</button>
+<p style="margin: 0; font-size: 13px; color: #6B655C">Valable 7 jours, utilisable une seule fois.</p>
+</main>
+</div>
+</sc-if>
+
+<!-- ===================== BARRE D'ONGLETS ===================== -->
+<nav aria-label="Navigation principale" style="flex: none; height: 76px; box-sizing: border-box; padding-bottom: 8px; border-top: 1px solid #E6E1D8; background: #FFFFFF; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<button type="button" onClick="{{tabMenu}}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600; color: {{tabMenuColor}}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5"></rect><path d="M8 3v4M16 3v4M4 10h16"></path></svg>
+Menu
+</button>
+<button type="button" onClick="{{tabPlats}}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600; color: {{tabPlatsColor}}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18M5 11v3a7 7 0 0 0 14 0v-3M9 7c0-1.5 1-1.5 1-3M14 7c0-1.5 1-1.5 1-3"></path></svg>
+Plats
+</button>
+<button type="button" onClick="{{tabCourses}}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600; color: {{tabCoursesColor}}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h2l2.2 10.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6"></path><circle cx="9.5" cy="20" r="1.2"></circle><circle cx="17" cy="20" r="1.2"></circle></svg>
+Courses
+</button>
+<button type="button" onClick="{{tabFoyer}}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600; color: {{tabFoyerColor}}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6.5 8 6.5M6 9.5V19h12V9.5M10 19v-5h4v5"></path></svg>
+Foyer
+</button>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.D = {
+      days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+      slots: ['Petit-déj', 'Midi', 'Goûter', 'Soir'],
+      rayons: ['Fruits et légumes', 'Boucherie', 'Crèmerie', 'Épicerie', 'Surgelés'],
+      ing: {
+        lasagne: { name: 'Feuilles de lasagne', rayon: 'Épicerie', buy: { mode: 'pack', name: 'boîte', size: 500, unit: 'g' } },
+        boeuf: { name: 'Bœuf haché', rayon: 'Boucherie', buy: { mode: 'weight' } },
+        concassees: { name: 'Tomates concassées', rayon: 'Épicerie', buy: { mode: 'pack', name: 'boîte', size: 400, unit: 'g' } },
+        tomates: { name: 'Tomates', rayon: 'Fruits et légumes', buy: { mode: 'piece' } },
+        oignon: { name: 'Oignon', rayon: 'Fruits et légumes', buy: { mode: 'piece' } },
+        carotte: { name: 'Carotte', rayon: 'Fruits et légumes', buy: { mode: 'piece' } },
+        lait: { name: 'Lait', rayon: 'Crèmerie', buy: { mode: 'pack', name: 'brique', size: 1000, unit: 'ml' } },
+        beurre: { name: 'Beurre', rayon: 'Crèmerie', buy: { mode: 'pack', name: 'plaquette', size: 250, unit: 'g' } },
+        farine: { name: 'Farine', rayon: 'Épicerie', buy: { mode: 'pack', name: 'paquet', size: 1000, unit: 'g' }, stock: true },
+        emmental: { name: 'Emmental râpé', rayon: 'Crèmerie', buy: { mode: 'pack', name: 'sachet', size: 200, unit: 'g' } },
+        poischiches: { name: 'Pois chiches', rayon: 'Épicerie', buy: { mode: 'pack', name: 'boîte', size: 400, unit: 'g' } },
+        coco: { name: 'Lait de coco', rayon: 'Épicerie', buy: { mode: 'pack', name: 'boîte', size: 400, unit: 'ml' } },
+        epinards: { name: 'Épinards', rayon: 'Surgelés', buy: { mode: 'pack', name: 'sachet', size: 600, unit: 'g' } },
+        riz: { name: 'Riz basmati', rayon: 'Épicerie', buy: { mode: 'pack', name: 'paquet', size: 1000, unit: 'g' } },
+        potiron: { name: 'Potiron', rayon: 'Fruits et légumes', buy: { mode: 'weight' } },
+        pdt: { name: 'Pomme de terre', rayon: 'Fruits et légumes', buy: { mode: 'piece' } },
+        creme: { name: 'Crème fraîche', rayon: 'Crèmerie', buy: { mode: 'pack', name: 'pot', size: 200, unit: 'ml' } },
+        flocons: { name: "Flocons d'avoine", rayon: 'Épicerie', buy: { mode: 'pack', name: 'paquet', size: 500, unit: 'g' } },
+        banane: { name: 'Banane', rayon: 'Fruits et légumes', buy: { mode: 'piece' } },
+        pates: { name: 'Pâtes', rayon: 'Épicerie', buy: { mode: 'pack', name: 'paquet', size: 500, unit: 'g' } },
+        pesto: { name: 'Pesto', rayon: 'Épicerie', buy: { mode: 'pack', name: 'pot', size: 190, unit: 'g' } },
+        parmesan: { name: 'Parmesan', rayon: 'Crèmerie', buy: { mode: 'weight' } },
+        oeufs: { name: 'Œufs', rayon: 'Crèmerie', buy: { mode: 'pack', name: 'boîte', size: 6, unit: 'pièce' } },
+        lentilles: { name: 'Lentilles vertes', rayon: 'Épicerie', buy: { mode: 'pack', name: 'paquet', size: 500, unit: 'g' } }
+      },
+      plats: {
+        lasagnes: { name: 'Lasagnes', servings: 4, kcal: 610, p: 34, g: 52, l: 28,
+          ings: [{ i: 'lasagne', q: 250, u: 'g' }, { i: 'boeuf', q: 400, u: 'g' }, { i: 'concassees', q: 600, u: 'g' }, { i: 'oignon', q: 1, u: 'pièce' }, { i: 'carotte', q: 2, u: 'pièce' }, { i: 'lait', q: 500, u: 'ml' }, { i: 'beurre', q: 40, u: 'g' }, { i: 'farine', q: 40, u: 'g' }, { i: 'emmental', q: 100, u: 'g' }],
+          recette: "1. Faire revenir l'oignon et les carottes, ajouter le bœuf puis les tomates. Laisser mijoter 30 min.\n2. Béchamel : fondre le beurre, ajouter la farine puis le lait en fouettant.\n3. Alterner pâtes, sauce et béchamel. Finir par l'emmental.\n4. Four à 180 °C pendant 40 min." },
+        curry: { name: 'Curry de pois chiches', servings: 4, kcal: 520, p: 16, g: 70, l: 19,
+          ings: [{ i: 'poischiches', q: 2, u: 'boîte' }, { i: 'coco', q: 1, u: 'boîte' }, { i: 'epinards', q: 300, u: 'g' }, { i: 'concassees', q: 400, u: 'g' }, { i: 'oignon', q: 1, u: 'pièce' }, { i: 'riz', q: 300, u: 'g' }],
+          recette: "1. Faire revenir l'oignon avec les épices.\n2. Ajouter pois chiches, tomates et lait de coco. 15 min à feu doux.\n3. Ajouter les épinards à la fin. Servir avec le riz." },
+        soupe: { name: 'Soupe de potiron', servings: 4, kcal: 180, p: 4, g: 24, l: 7,
+          ings: [{ i: 'potiron', q: 1000, u: 'g' }, { i: 'pdt', q: 2, u: 'pièce' }, { i: 'oignon', q: 1, u: 'pièce' }, { i: 'creme', q: 100, u: 'ml' }],
+          recette: "1. Couper potiron, pommes de terre et oignon.\n2. Couvrir d'eau, cuire 25 min.\n3. Mixer avec la crème." },
+        porridge: { name: 'Porridge banane', servings: 2, kcal: 330, p: 12, g: 55, l: 7,
+          ings: [{ i: 'flocons', q: 100, u: 'g' }, { i: 'lait', q: 400, u: 'ml' }, { i: 'banane', q: 2, u: 'pièce' }],
+          recette: "1. Cuire les flocons dans le lait 5 min en remuant.\n2. Servir avec la banane coupée." },
+        pesto: { name: 'Pâtes au pesto', servings: 2, kcal: 560, p: 19, g: 75, l: 20,
+          ings: [{ i: 'pates', q: 200, u: 'g' }, { i: 'pesto', q: 90, u: 'g' }, { i: 'parmesan', q: 30, u: 'g' }],
+          recette: "Cuire les pâtes, mélanger avec le pesto, parsemer de parmesan." },
+        crepes: { name: 'Crêpes', servings: 4, kcal: 300, p: 10, g: 40, l: 11,
+          ings: [{ i: 'farine', q: 250, u: 'g' }, { i: 'oeufs', q: 4, u: 'pièce' }, { i: 'lait', q: 500, u: 'ml' }, { i: 'beurre', q: 30, u: 'g' }],
+          recette: "1. Mélanger farine et œufs, ajouter le lait petit à petit.\n2. Ajouter le beurre fondu, laisser reposer 1 h.\n3. Cuire à la poêle." },
+        lentilles: { name: 'Salade de lentilles', servings: 5, kcal: 340, p: 18, g: 45, l: 8,
+          ings: [{ i: 'lentilles', q: 250, u: 'g' }, { i: 'carotte', q: 2, u: 'pièce' }, { i: 'tomates', q: 3, u: 'pièce' }, { i: 'oignon', q: 1, u: 'pièce' }],
+          recette: "1. Cuire les lentilles 20 min, laisser refroidir.\n2. Ajouter carottes râpées, tomates et oignon émincé.\n3. Assaisonner." }
+      }
+    };
+    this.state = {
+      screen: 'menu', tab: 'menu', view: 'list', search: '',
+      platId: 'lasagnes', platBack: 'plats', mealId: null, recapBack: 'addPick',
+      addSel: {}, addSelOrder: [], formMode: 'edit', demo: null, demoName: '', demoUnit: 'g',
+      people: 2, copied: false, checked: {}, deleted: {}, confirmDel: false, ingId: 'concassees', ingBack: 'ings',
+      ing: JSON.parse(JSON.stringify(this.D.ing)), dragId: null, moveId: null,
+      shopDay: 5, duration: 14, pIdx: 0, prepDays: 14, prepSkip: {},
+      // Un menu couvre une période qui commence le jour des courses (ici samedi), pour 1 ou 2 semaines.
+      periods: [{ id: 'p1', start: '2026-10-17', days: 14 }],
+      // Une « fournée » = une recette cuisinée N fois ; ses portions sont découpées en repas.
+      batches: [
+        { id: 'b1', p: 'p1', plat: 'soupe', times: 1, carried: true },
+        { id: 'b2', p: 'p1', plat: 'lasagnes', times: 1 },
+        { id: 'b3', p: 'p1', plat: 'pesto', times: 1 },
+        { id: 'b4', p: 'p1', plat: 'curry', times: 1 },
+        { id: 'b5', p: 'p1', plat: 'lentilles', times: 1 },
+        { id: 'b6', p: 'p1', plat: 'crepes', times: 1 }
+      ],
+      meals: [
+        { id: 1, b: 'b1', portions: 2, day: null, slot: null },
+        { id: 2, b: 'b2', portions: 2, day: 3, slot: 'Soir', eaten: true },
+        { id: 3, b: 'b2', portions: 2, day: 5, slot: 'Soir', eaten: true },
+        { id: 4, b: 'b3', portions: 2, day: 4, slot: 'Midi', eaten: true },
+        { id: 5, b: 'b4', portions: 2, day: null, slot: null },
+        { id: 6, b: 'b4', portions: 2, day: null, slot: null },
+        { id: 7, b: 'b5', portions: 2, day: 9, slot: 'Soir' },
+        { id: 8, b: 'b5', portions: 2, day: 13, slot: 'Midi' },
+        { id: 9, b: 'b5', portions: 1, day: 11, slot: 'Midi' },
+        { id: 10, b: 'b6', portions: 2, day: 7, slot: 'Goûter' },
+        { id: 11, b: 'b6', portions: 2, day: 8, slot: 'Goûter' }
+      ]
+    };
+  }
+
+  renderVals() {
+    const s = this.state, D = this.D, P = D.plats, I = s.ing;
+    const go = (o) => () => this.setState(o);
+    const num = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+    const fmt = (q, u) => {
+      if (u === 'g') return q >= 1000 ? num(q / 1000) + ' kg' : num(q) + ' g';
+      if (u === 'ml') return q >= 1000 ? num(q / 1000) + ' L' : num(q) + ' ml';
+      const n = Math.ceil(q - 0.001);
+      if (u === 'boîte') return n + (n > 1 ? ' boîtes' : ' boîte');
+      return '× ' + n;
+    };
+    const TODAY = '2026-10-24';
+    const WD = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    const MO = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+    const dateAt = (iso, off) => { const t = new Date(iso + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + off); return t; };
+    const isoOf = (t) => t.toISOString().slice(0, 10);
+    const shortDay = (t) => WD[t.getUTCDay()].slice(0, 3).toLowerCase() + '. ' + t.getUTCDate();
+    const shortDate = (t) => shortDay(t) + ' ' + MO[t.getUTCMonth()];
+    const longDate = (t) => WD[t.getUTCDay()] + ' ' + t.getUTCDate() + ' ' + MO[t.getUTCMonth()];
+    const cap = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+    const rangeLabel = (pr) => 'Du ' + shortDate(dateAt(pr.start, 0)) + ' au ' + shortDate(dateAt(pr.start, pr.days - 1));
+    const lengthLabel = (n) => n === 7 ? '1 semaine' : (n === 14 ? '2 semaines' : n + ' jours');
+    const batchPeriod = (bid) => { const b = s.batches.filter((x) => x.id === bid)[0]; return s.periods.filter((x) => x.id === b.p)[0]; };
+    const when = (m) => {
+      const pr = batchPeriod(m.b);
+      const d = m.day != null ? cap(shortDay(dateAt(pr.start, m.day))) : '';
+      if (d && m.slot) return d + ' · ' + m.slot.toLowerCase();
+      if (d) return d;
+      if (m.slot) return m.slot;
+      return 'Pas de jour';
+    };
+    const curIdx = s.periods.findIndex((pr) => TODAY >= pr.start && TODAY <= isoOf(dateAt(pr.start, pr.days - 1)));
+    const period = s.periods[s.pIdx] || null;
+    const last = s.periods[s.periods.length - 1];
+    const nextStart = (() => {
+      const t = dateAt(last.start, last.days);
+      while (((t.getUTCDay() + 6) % 7) !== s.shopDay) t.setUTCDate(t.getUTCDate() + 1);
+      return isoOf(t);
+    })();
+    const portionsLabel = (n) => n + (n > 1 ? ' portions' : ' portion');
+    const repasLabel = (n) => n + (n > 1 ? ' repas' : ' repas');
+    const green = '#2E6A4C';
+    const batchOf = (id) => s.batches.filter((b) => b.id === id)[0];
+    // Découpe les portions d'une recette en repas pour le foyer : 5 portions à 2 → [2, 2, 1].
+    const split = (k, times) => {
+      const total = P[k].servings * times, people = s.people, out = [];
+      for (let i = 0; i < Math.floor(total / people); i++) out.push(people);
+      if (total % people) out.push(total % people);
+      return out;
+    };
+    const calc = (k, times) => {
+      const total = P[k].servings * times, full = Math.floor(total / s.people), rem = total % s.people;
+      let t = portionsLabel(total) + ' → ' + repasLabel(full) + ' pour ' + s.people;
+      if (rem) t += ' + ' + portionsLabel(rem);
+      return t;
+    };
+
+    // Menu : une carte par repas
+    const viewMeals = period ? s.meals.filter((m) => batchOf(m.b).p === period.id) : [];
+    const menuItems = viewMeals.map((m) => {
+      const bt = batchOf(m.b), p = P[bt.plat];
+      const siblings = s.meals.filter((x) => x.b === m.b);
+      const part = siblings.length > 1 ? ' · repas ' + (siblings.indexOf(m) + 1) + ' sur ' + siblings.length : '';
+      return {
+        name: p.name, portions: portionsLabel(m.portions) + part, when: when(m),
+        whenColor: (m.day == null && !m.slot) ? '#8A8378' : '#4A453E',
+        slotLabel: m.slot || 'sans moment précis',
+        carried: !!bt.carried, eaten: !!m.eaten,
+        nameColor: m.eaten ? '#8A8378' : '#1E1C19', nameDeco: m.eaten ? 'line-through' : 'none',
+        boxBg: m.eaten ? green : '#FFFFFF', boxBorder: m.eaten ? green : '#A8A094',
+        boxLabel: (m.eaten ? 'Marquer comme pas mangé : ' : 'Marquer comme mangé : ') + p.name,
+        dayIndex: m.day == null ? -1 : m.day,
+        moveBorder: s.moveId === m.id ? green : '#E6E1D8',
+        moveLabel: 'Déplacer : ' + p.name,
+        startMove: go({ moveId: m.id, dragId: null }),
+        dragStart: (e) => { try { e.dataTransfer.setData('text/plain', String(m.id)); e.dataTransfer.effectAllowed = 'move'; } catch (err) {} this.setState({ dragId: m.id, moveId: null }); },
+        dragEnd: () => { if (this.state.dragId) this.setState({ dragId: null }); },
+        toggle: () => this.setState({ meals: this.state.meals.map((x) => x.id === m.id ? Object.assign({}, x, { eaten: !x.eaten }) : x) }),
+        open: go({ screen: 'meal', mealId: m.id })
+      };
+    });
+    const eatenCount = menuItems.filter((x) => x.eaten).length;
+    // Vue par jour : « À placer » en haut, puis chaque jour du menu (même vide), cible du glisser-déposer.
+    const moveTo = (id, day) => this.setState({
+      meals: this.state.meals.map((x) => x.id === id ? Object.assign({}, x, { day: day < 0 ? null : day }) : x),
+      dragId: null, moveId: null
+    });
+    const active = s.dragId || s.moveId;
+    const dayGroups = period ? [-1].concat(Array.from({ length: period.days }, (_, i) => i)).map((i) => {
+      const t = i >= 0 ? dateAt(period.start, i) : null;
+      const isToday = t && isoOf(t) === TODAY;
+      const items = menuItems.filter((x) => x.dayIndex === i);
+      return {
+        label: t ? longDate(t) + (isToday ? ' · aujourd’hui' : '') : 'À placer',
+        labelColor: isToday ? green : '#6B655C',
+        items: items, empty: items.length === 0,
+        canPlace: !!s.moveId,
+        dropBg: active ? '#F1F7F3' : 'transparent', dropBorder: active ? '#9DC3AE' : 'transparent',
+        over: (e) => { e.preventDefault(); },
+        drop: (e) => { e.preventDefault(); if (this.state.dragId) moveTo(this.state.dragId, i); },
+        place: () => moveTo(this.state.moveId, i)
+      };
+    }).filter((g) => g.items.length || active || g.label !== 'À placer') : [];
+    const movingMeal = s.meals.filter((m) => m.id === s.moveId)[0];
+
+    // Un repas du menu
+    const cm = s.meals.filter((m) => m.id === s.mealId)[0] || s.meals[0];
+    const setMeal = (o) => () => this.setState({ meals: this.state.meals.map((x) => x.id === cm.id ? Object.assign({}, x, o) : x) });
+    const chip = (sel) => ({ bg: sel ? green : '#FFFFFF', color: sel ? '#FFFFFF' : '#1E1C19', border: sel ? green : '#DCD6CB' });
+    let meal = { name: '', portions: '', batch: '', openRecipe: null };
+    let dayChips = [], slotChips = [];
+    if (cm) {
+      const bt = batchOf(cm.b), p = P[bt.plat];
+      const siblings = s.meals.filter((x) => x.b === cm.b);
+      meal = {
+        name: p.name,
+        portions: portionsLabel(cm.portions) + (siblings.length > 1 ? ' · repas ' + (siblings.indexOf(cm) + 1) + ' sur ' + siblings.length : ''),
+        batch: 'Recette ×' + bt.times + ' (' + portionsLabel(p.servings * bt.times) + ')' + (bt.carried ? ', reportée du menu précédent' : ''),
+        openRecipe: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'plat', platId: bt.plat, platBack: 'meal' }); }
+      };
+      const mp = batchPeriod(cm.b);
+      dayChips = [{ label: 'Pas de jour', v: null }].concat(Array.from({ length: mp.days }, (_, i) => ({ label: cap(shortDay(dateAt(mp.start, i))), v: i }))).map((c) => Object.assign({ label: c.label, selected: cm.day === c.v, pick: setMeal({ day: c.v }) }, chip(cm.day === c.v)));
+      slotChips = [{ label: 'Aucun', v: null }].concat(D.slots.map((x) => ({ label: x, v: x }))).map((c) => Object.assign({ label: c.label, selected: cm.slot === c.v, pick: setMeal({ slot: c.v }) }, chip(cm.slot === c.v)));
+    }
+    const removeMeal = () => {
+      const meals = this.state.meals.filter((x) => x.id !== cm.id);
+      const batches = this.state.batches.filter((b) => meals.some((x) => x.b === b.id));
+      this.setState({ meals: meals, batches: batches, screen: 'menu' });
+    };
+
+    // Plats
+    const q = (s.search || '').toLowerCase();
+    const inMenu = {};
+    s.batches.filter((b) => period && b.p === period.id).forEach((b) => { inMenu[b.plat] = true; });
+    const platList = Object.keys(P).filter((k) => !s.deleted[k]).filter((k) => P[k].name.toLowerCase().indexOf(q) !== -1).map((k) => ({
+      name: P[k].name, sub: portionsLabel(P[k].servings) + ' · ' + P[k].kcal + ' kcal par portion', inMenu: !!inMenu[k],
+      open: go({ screen: 'plat', platId: k, platBack: 'plats' }),
+      selected: !!s.addSel[k],
+      selBg: s.addSel[k] ? '#F1F7F3' : '#FFFFFF', selBorder: s.addSel[k] ? green : '#E6E1D8',
+      boxBg: s.addSel[k] ? green : '#FFFFFF', boxBorder: s.addSel[k] ? green : '#A8A094',
+      pick: () => {
+        const sel = Object.assign({}, this.state.addSel);
+        let order = this.state.addSelOrder.filter((x) => x !== k);
+        if (sel[k]) delete sel[k]; else { sel[k] = 1; order = order.concat([k]); }
+        this.setState({ addSel: sel, addSelOrder: order });
+      }
+    }));
+
+    const cp = P[s.platId] || P.lasagnes;
+    const plat = {
+      name: cp.name, servings: 'La recette donne ' + portionsLabel(cp.servings),
+      ings: cp.ings.map((x, i) => ({ name: I[x.i].name, qty: x.u === 'pièce' ? String(x.q) : fmt(x.q, x.u), sep: i === 0 ? 'transparent' : '#EFEBE3' })),
+      recette: cp.recette, kcal: String(cp.kcal), prot: cp.p + ' g', gluc: cp.g + ' g', lip: cp.l + ' g'
+    };
+
+    const isEdit = s.formMode === 'edit';
+    const form = isEdit ? {
+      name: cp.name, servings: String(cp.servings), recette: cp.recette, kcal: String(cp.kcal), p: String(cp.p), g: String(cp.g), l: String(cp.l),
+      ings: cp.ings.map((x, i) => ({ name: I[x.i].name, qty: String(x.q), unit: x.u, idName: 'fi-n-' + i, idQty: 'fi-q-' + i, idUnit: 'fi-u-' + i }))
+    } : { name: '', servings: '4', recette: '', kcal: '', p: '', g: '', l: '', ings: [] };
+
+    // Ajout au menu : combien de fois chaque recette
+    const selKeys = s.addSelOrder.filter((k) => s.addSel[k]);
+    const nSel = selKeys.length;
+    const setTimes = (k, d) => () => {
+      const sel = Object.assign({}, this.state.addSel);
+      sel[k] = Math.max(1, sel[k] + d);
+      this.setState({ addSel: sel });
+    };
+    const selItems = selKeys.map((k) => ({
+      name: P[k].name, times: s.addSel[k], calc: calc(k, s.addSel[k]),
+      dec: setTimes(k, -1), inc: setTimes(k, 1),
+      decLabel: 'Une fois de moins : ' + P[k].name, incLabel: 'Une fois de plus : ' + P[k].name
+    }));
+    const nNewMeals = selKeys.reduce((acc, k) => acc + split(k, s.addSel[k]).length, 0);
+    const confirmMulti = () => {
+      const t = Date.now();
+      const pid = (this.state.periods[this.state.pIdx] || this.state.periods[this.state.periods.length - 1]).id;
+      const batches = selKeys.map((k, i) => ({ id: 'n' + t + '-' + i, p: pid, plat: k, times: this.state.addSel[k] }));
+      let meals = [];
+      batches.forEach((b, i) => {
+        split(b.plat, b.times).forEach((portions, j) => { meals.push({ id: t + i * 100 + j, b: b.id, portions: portions, day: null, slot: null }); });
+      });
+      this.setState({
+        batches: this.state.batches.concat(batches), meals: this.state.meals.concat(meals),
+        screen: 'menu', tab: 'menu', search: '', addSel: {}, addSelOrder: []
+      });
+    };
+
+    // Courses : chaque fournée compte ses ingrédients × le nombre de fois la recette
+    const agg = {};
+    // Une fois les courses faites, les fournées sont « achetées » : elles sortent de la liste.
+    const toBuy = s.batches.filter((b) => period && b.p === period.id && !b.carried && !b.bought);
+    const anyBought = s.batches.some((b) => period && b.p === period.id && b.bought);
+    toBuy.forEach((b) => {
+      const p = P[b.plat];
+      p.ings.forEach((x) => {
+        const k = x.i + '|' + x.u;
+        if (!agg[k]) agg[k] = { k: k, i: x.i, u: x.u, q: 0, src: [] };
+        agg[k].q += x.q * b.times;
+        if (agg[k].src.indexOf(p.name) === -1) agg[k].src.push(p.name);
+      });
+    });
+    // Conversion en unités d'achat : 600 g de tomates concassées en boîtes de 400 g → 2 boîtes.
+    const buyQty = (ing, q, u) => {
+      const b = ing.buy || {};
+      if (b.mode === 'pack' && b.size > 0) {
+        const plural = (n) => n + ' ' + b.name + (n > 1 && !/s$/.test(b.name) ? 's' : '');
+        if (u === b.name) return { qty: plural(Math.ceil(q - 0.001)), sub: '' };
+        if (u === b.unit) return { qty: plural(Math.ceil(q / b.size - 0.001)), sub: (u === 'pièce' ? Math.ceil(q - 0.001) : fmt(q, u)) + ' utilisés' };
+      }
+      if (u === 'pièce') return { qty: String(Math.ceil(q - 0.001)), sub: '' };
+      return { qty: fmt(q, u), sub: '' };
+    };
+    const stockSkipped = Object.keys(agg).filter((k) => I[agg[k].i].stock).map((k) => I[agg[k].i].name);
+    const lines = Object.keys(agg).filter((k) => !I[agg[k].i].stock).map((k) => {
+      const a = agg[k], on = !!s.checked[k], bq = buyQty(I[a.i], a.q, a.u);
+      return {
+        k: k, name: I[a.i].name, rayon: I[a.i].rayon, qty: bq.qty, qtySub: bq.sub, from: a.src.join(', '), checked: on,
+        edit: go({ screen: 'ing', ingId: a.i, ingBack: 'courses' }), editLabel: 'Réglages de l’ingrédient : ' + I[a.i].name,
+        nameColor: on ? '#8A8378' : '#1E1C19', nameDeco: on ? 'line-through' : 'none',
+        boxBg: on ? green : '#FFFFFF', boxBorder: on ? green : '#A8A094',
+        toggle: () => { const c = Object.assign({}, this.state.checked); c[k] = !c[k]; this.setState({ checked: c }); }
+      };
+    });
+    const rayonGroups = D.rayons.map((r) => ({
+      rayon: r,
+      items: lines.filter((l) => l.rayon === r).sort((a, b) => a.name.localeCompare(b.name, 'fr')).map((l, i) => Object.assign(l, { sep: i === 0 ? 'transparent' : '#EFEBE3' }))
+    })).filter((g) => g.items.length);
+    const checkedCount = lines.filter((l) => l.checked).length;
+    const carried = s.batches.filter((b) => period && b.p === period.id && b.carried).map((b) => P[b.plat].name);
+
+    // Préparer le prochain menu
+    const prepPeriod = { start: nextStart, days: s.prepDays };
+    const carryMeals = s.meals.filter((m) => batchOf(m.b).p === last.id && !m.eaten);
+    const prepCarry = carryMeals.map((m, i) => {
+      const on = !s.prepSkip[m.id];
+      return {
+        name: P[batchOf(m.b).plat].name, sub: portionsLabel(m.portions) + ' · ' + when(m), checked: on,
+        sep: i === 0 ? 'transparent' : '#EFEBE3', boxBg: on ? green : '#FFFFFF', boxBorder: on ? green : '#A8A094',
+        toggle: () => { const k = Object.assign({}, this.state.prepSkip); k[m.id] = !k[m.id]; this.setState({ prepSkip: k }); }
+      };
+    });
+    const confirmPrep = () => {
+      const st = this.state, nid = 'p' + Date.now();
+      const moving = carryMeals.filter((m) => !st.prepSkip[m.id]);
+      const newBatches = {};
+      moving.forEach((m) => {
+        const b = batchOf(m.b);
+        if (!newBatches[b.id]) newBatches[b.id] = { id: b.id + '-r' + nid, p: nid, plat: b.plat, times: b.times, carried: true };
+      });
+      const meals = st.meals.map((m) => moving.indexOf(m) !== -1 ? Object.assign({}, m, { b: newBatches[m.b].id, day: null, slot: null }) : m);
+      const periods = st.periods.concat([{ id: nid, start: nextStart, days: st.prepDays }]);
+      this.setState({ periods: periods, batches: st.batches.concat(Object.keys(newBatches).map((k) => newBatches[k])), meals: meals, pIdx: periods.length - 1, screen: 'menu', tab: 'menu', prepSkip: {} });
+    };
+    // Ingrédients du foyer
+    const buyLabel = (b) => b && b.mode === 'pack' ? cap(b.name) + ' de ' + (b.unit === 'pièce' ? b.size + ' pièces' : fmt(b.size, b.unit)) : (b && b.mode === 'piece' ? 'À la pièce' : 'Au poids ou au volume');
+    const usedBy = (k) => Object.keys(P).filter((pk) => !s.deleted[pk] && P[pk].ings.some((x) => x.i === k)).map((pk) => P[pk].name);
+    const ingGroups = D.rayons.concat(['Autre']).map((r) => ({
+      rayon: r,
+      items: Object.keys(I).filter((k) => !I[k].deleted && I[k].rayon === r && I[k].name.toLowerCase().indexOf(q) !== -1)
+        .sort((a, b) => I[a].name.localeCompare(I[b].name, 'fr'))
+        .map((k, i) => { const n = usedBy(k).length; return {
+          name: I[k].name, stock: !!I[k].stock, sep: i === 0 ? 'transparent' : '#EFEBE3',
+          sub: buyLabel(I[k].buy) + ' · ' + (n ? n + (n > 1 ? ' plats' : ' plat') : 'aucun plat'),
+          open: go({ screen: 'ing', ingId: k, ingBack: 'ings' })
+        }; })
+    })).filter((g) => g.items.length);
+    const ck = s.ingId, ci = I[ck] || I.concassees;
+    const setIng = (patch) => { const all = Object.assign({}, this.state.ing); all[ck] = Object.assign({}, all[ck], patch); this.setState({ ing: all }); };
+    const setBuy = (patch) => setIng({ buy: Object.assign({}, this.state.ing[ck].buy, patch) });
+    const ciUsed = usedBy(ck);
+    const cb = ci.buy || {};
+    const ing = {
+      name: ci.name, title: ci.name || 'Nouvel ingrédient', onName: (e) => setIng({ name: e.target.value }),
+      stock: !!ci.stock, isPack: cb.mode === 'pack',
+      packName: cb.name || '', packSize: cb.size ? String(cb.size) : '', packUnit: cb.unit || 'g',
+      packHint: cb.mode === 'pack' ? 'Dans la liste : le nombre de ' + (cb.name || 'paquet') + 's, arrondi au-dessus.' : '',
+      onPackName: (e) => setBuy({ name: e.target.value }),
+      onPackSize: (e) => setBuy({ size: parseFloat(String(e.target.value).replace(',', '.')) || 0 }),
+      onPackUnit: (e) => setBuy({ unit: e.target.value }),
+      switchBg: ci.stock ? green : '#CFC8BC', switchSide: ci.stock ? 'flex-end' : 'flex-start',
+      toggleStock: () => setIng({ stock: !this.state.ing[ck].stock }),
+      usedIn: ciUsed.length ? ciUsed.join(', ') : 'Aucun plat',
+      canDelete: ciUsed.length === 0, cantDelete: ciUsed.length > 0,
+      remove: () => { setIng({ deleted: true }); this.setState({ screen: 'ings' }); }
+    };
+    const ingRayonChips = D.rayons.concat(['Autre']).map((r) => Object.assign({ label: r, selected: ci.rayon === r, pick: () => setIng({ rayon: r }) }, chip(ci.rayon === r)));
+    const buyChips = [['weight', 'Au poids / volume'], ['piece', 'À la pièce'], ['pack', 'En paquet']].map((o) => Object.assign({
+      label: o[1], selected: cb.mode === o[0],
+      pick: () => setIng({ buy: o[0] === 'pack' ? Object.assign({ name: 'paquet', size: 500, unit: 'g' }, this.state.ing[ck].buy, { mode: 'pack' }) : Object.assign({}, this.state.ing[ck].buy, { mode: o[0] }) })
+    }, chip(cb.mode === o[0])));
+    const back = () => {
+      const sc = s.screen;
+      if (sc === 'plat') this.setState({ screen: s.platBack });
+      else if (sc === 'form') this.setState({ screen: isEdit ? 'plat' : 'plats', demo: null });
+      else if (sc === 'meal') this.setState({ screen: 'menu' });
+      else if (sc === 'prep') this.setState({ screen: 'menu' });
+      else if (sc === 'ing') {
+        // Un nouvel ingrédient laissé sans nom n'est pas gardé.
+        if (!(I[ck].name || '').trim()) { const all = Object.assign({}, s.ing); delete all[ck]; this.setState({ ing: all, ingId: 'concassees', screen: s.ingBack }); }
+        else this.setState({ screen: s.ingBack });
+      }
+      else if (sc === 'addPick') this.setState({ screen: 'menu', search: '', addSel: {}, addSelOrder: [] });
+      else if (sc === 'addRecap') this.setState(s.recapBack === 'plat' ? { screen: 'plat', addSel: {}, addSelOrder: [] } : { screen: 'addPick' });
+      else if (sc === 'invite') this.setState({ screen: 'foyer', copied: false });
+      else this.setState({ screen: s.tab });
+    };
+    const tabColor = (t) => s.tab === t ? green : '#6B655C';
+    const tab = (t) => go({ screen: t, tab: t, search: '', demo: null });
+
+    return {
+      isMenu: s.screen === 'menu', isAddPick: s.screen === 'addPick', isAddRecap: s.screen === 'addRecap', isMeal: s.screen === 'meal',
+      isPlats: s.screen === 'plats', isPlat: s.screen === 'plat', isForm: s.screen === 'form',
+      isCourses: s.screen === 'courses', isFoyer: s.screen === 'foyer', isInvite: s.screen === 'invite',
+      tabMenu: tab('menu'), tabPlats: tab('plats'), tabCourses: tab('courses'), tabFoyer: tab('foyer'),
+      tabMenuColor: tabColor('menu'), tabPlatsColor: tabColor('plats'), tabCoursesColor: tabColor('courses'), tabFoyerColor: tabColor('foyer'),
+      back: back,
+
+      menuItems: menuItems, dayGroups: dayGroups,
+      hasPeriod: !!period, noPeriod: !period, isPrep: s.screen === 'prep',
+      isMoving: !!s.moveId, showDragHint: !s.moveId,
+      movingLabel: movingMeal ? 'Où placer « ' + P[batchOf(movingMeal.b).plat].name + ' » ?' : '',
+      cancelMove: go({ moveId: null }),
+      periodTitle: !period ? 'Prochain menu' : (s.pIdx === curIdx ? 'Menu en cours' : (s.pIdx > curIdx ? 'Prochain menu' : 'Menu passé')),
+      periodLabel: period ? rangeLabel(period) : 'À partir du ' + shortDate(dateAt(nextStart, 0)),
+      menuSummary: period ? lengthLabel(period.days) + ' · ' + repasLabel(menuItems.length) + ', ' + eatenCount + (eatenCount > 1 ? ' mangés' : ' mangé') : '',
+      prevPeriod: go({ pIdx: Math.max(0, s.pIdx - 1) }), nextPeriod: go({ pIdx: Math.min(s.periods.length, s.pIdx + 1) }),
+      prevColor: s.pIdx === 0 ? '#C9C2B6' : '#1E1C19',
+      openPrep: go({ screen: 'prep', prepDays: s.duration, prepSkip: {} }),
+      prepDurations: [7, 14].map((n) => Object.assign({ label: lengthLabel(n), selected: s.prepDays === n, pick: go({ prepDays: n }) }, chip(s.prepDays === n))),
+      prepRange: rangeLabel(prepPeriod), prepCarry: prepCarry, prepNoCarry: prepCarry.length === 0, confirmPrep: confirmPrep,
+      shopDayChips: ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'].map((l, i) => Object.assign({ label: l, selected: s.shopDay === i, pick: go({ shopDay: i }) }, chip(s.shopDay === i))),
+      durationChips: [7, 14].map((n) => Object.assign({ label: lengthLabel(n), selected: s.duration === n, pick: go({ duration: n }) }, chip(s.duration === n))),
+      coursesPeriod: period ? 'Menu ' + rangeLabel(period).charAt(0).toLowerCase() + rangeLabel(period).slice(1) : 'Pas de menu pour cette période',
+      isListView: s.view === 'list', isDayView: s.view === 'days',
+      viewList: go({ view: 'list', moveId: null }), viewDays: go({ view: 'days' }),
+      listBg: s.view === 'list' ? '#FFFFFF' : 'transparent', listColor: s.view === 'list' ? '#1E1C19' : '#6B655C',
+      daysBg: s.view === 'days' ? '#FFFFFF' : 'transparent', daysColor: s.view === 'days' ? '#1E1C19' : '#6B655C',
+      openAddPick: go({ screen: 'addPick', search: '', addSel: {}, addSelOrder: [] }),
+      hasSel: nSel > 0, selItems: selItems,
+      selCta: 'Continuer avec ' + nSel + (nSel > 1 ? ' plats' : ' plat'),
+      recapIntro: 'Les portions de chaque recette sont découpées en repas pour ' + s.people + (s.people > 1 ? ' personnes.' : ' personne.'),
+      recapCta: 'Ajouter ' + repasLabel(nNewMeals) + ' au menu',
+      openRecap: go({ screen: 'addRecap', recapBack: 'addPick' }),
+      confirmMulti: confirmMulti,
+
+      meal: meal, dayChips: dayChips, slotChips: slotChips, removeMeal: removeMeal,
+
+      search: s.search, onSearch: (e) => this.setState({ search: e.target.value }),
+      platList: platList, platsEmpty: platList.length === 0,
+      openNewForm: go({ screen: 'form', formMode: 'new', demo: null }),
+      openEditForm: go({ screen: 'form', formMode: 'edit', demo: null, confirmDel: false }),
+      plat: plat,
+      addFromPlat: () => { const sel = {}; sel[s.platId] = 1; this.setState({ screen: 'addRecap', recapBack: 'plat', addSel: sel, addSelOrder: [s.platId], pIdx: Math.min(s.pIdx, s.periods.length - 1) }); },
+
+      formTitle: isEdit ? 'Modifier le plat' : 'Nouveau plat', form: form,
+      canDelete: isEdit, confirmingDelete: s.confirmDel, notConfirming: !s.confirmDel,
+      deleteTitle: 'Supprimer « ' + cp.name + ' » ?',
+      deleteText: inMenu[s.platId]
+        ? 'Il disparaît de tes plats. Les repas déjà au menu restent, et ses ingrédients restent dans la liste de courses en cours.'
+        : 'Il disparaît de tes plats. Les anciens menus qui le contiennent restent consultables.',
+      askDelete: go({ confirmDel: true }), cancelDelete: go({ confirmDel: false }),
+      doDelete: () => { const del = Object.assign({}, this.state.deleted); del[this.state.platId] = true; this.setState({ deleted: del, confirmDel: false, screen: 'plats', tab: 'plats' }); },
+      demoSuggest: s.demo === 'suggest', demoCreate: s.demo === 'create', demoPicked: s.demo === 'picked',
+      demoName: s.demoName, demoUnit: s.demoUnit,
+      startSuggest: go({ demo: 'suggest' }),
+      pickTomates: go({ demo: 'picked', demoName: 'Tomates', demoUnit: 'pièce' }),
+      pickConcassees: go({ demo: 'picked', demoName: 'Tomates concassées', demoUnit: 'boîte' }),
+      startCreate: go({ demo: 'create' }),
+      rayonChips: D.rayons.concat(['Autre']).map((r) => ({ label: r, pick: go({ demo: 'picked', demoName: 'tom', demoUnit: 'g' }) })),
+
+      rayonGroups: rayonGroups, hasLines: lines.length > 0, noLines: lines.length === 0,
+      hasStockSkipped: stockSkipped.length > 0 && lines.length > 0,
+      stockNote: 'Pas dans la liste, toujours en stock : ' + stockSkipped.join(', ') + '.',
+      isIngs: s.screen === 'ings', isIng: s.screen === 'ing', openIngs: go({ screen: 'ings', tab: 'plats', search: '' }),
+      newIng: () => {
+        const k = 'new' + Date.now(), all = Object.assign({}, this.state.ing);
+        all[k] = { name: '', rayon: 'Épicerie', buy: { mode: 'weight' }, stock: false };
+        this.setState({ ing: all, ingId: k, ingBack: 'ings', screen: 'ing', search: '' });
+      },
+      ingGroups: ingGroups, ing: ing, ingRayonChips: ingRayonChips, buyChips: buyChips,
+      emptyTitle: !period ? 'Pas de menu pour cette période' : (anyBought ? 'Courses faites' : 'Rien à acheter'),
+      emptyText: !period ? 'Prépare un menu pour voir sa liste de courses.' : (anyBought ? 'La liste de ce menu a été supprimée. Elle se remplira si tu ajoutes des plats.' : 'Ajoute des plats au menu pour remplir la liste.'),
+      finishCourses: () => this.setState({ batches: this.state.batches.map((b) => toBuy.indexOf(b) !== -1 ? Object.assign({}, b, { bought: true }) : b), checked: {} }),
+      coursesSummary: lines.length + ' articles, ' + checkedCount + (checkedCount > 1 ? ' cochés' : ' coché'),
+      hasCarried: carried.length > 0 && lines.length > 0,
+      carriedNote: carried.join(', ') + ' : reporté du menu précédent, donc pas compté dans les courses (déjà acheté).',
+
+      defaultPortions: s.people,
+      defDec: go({ people: Math.max(1, s.people - 1) }), defInc: go({ people: s.people + 1 }),
+      openInvite: go({ screen: 'invite', copied: false }),
+      copyLink: go({ copied: true }), copyLabel: s.copied ? 'Lien copié' : 'Copier le lien'
+    };
+  }
+}
+</script>
+</body>
+</html>
