@@ -6,6 +6,7 @@ import {
   lengthLabel,
   longDate,
   nextMenuStart,
+  preparedMenuStart,
   rangeLabel,
   shortDate,
   shortDay,
@@ -68,5 +69,18 @@ describe("labels", () => {
 describe("todayInParis", () => {
   it("should already be tomorrow in Paris when it is late evening in UTC", () => {
     expect(todayInParis(new Date("2026-10-24T23:30:00Z"))).toBe("2026-10-25");
+  });
+});
+
+describe("preparedMenuStart", () => {
+  const last = { startDate: "2026-10-17", lengthDays: 14 };
+
+  it("should start the day after the last menu when it is prepared on time", () => {
+    expect(preparedMenuStart(last, SATURDAY, "2026-10-31")).toBe("2026-10-31");
+    expect(preparedMenuStart(last, SATURDAY, "2026-10-29")).toBe("2026-10-31");
+  });
+
+  it("should start on the last shopping day when the last menu ended weeks ago", () => {
+    expect(preparedMenuStart(last, SATURDAY, "2026-11-20")).toBe("2026-11-14");
   });
 });

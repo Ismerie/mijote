@@ -97,3 +97,11 @@ export function lengthLabel(lengthDays: number): string {
   }
   return `${lengthDays} jours`;
 }
+
+// Début du menu préparé après le dernier (#30) : le jour des courses qui suit sa fin ; si ce jour est
+// déjà loin derrière (plusieurs semaines sans menu), le dernier jour des courses passé.
+export function preparedMenuStart(last: { startDate: string; lengthDays: number }, shoppingDay: number, today: string): string {
+  const next = nextMenuStart(last.startDate, last.lengthDays, shoppingDay);
+  const recent = lastShoppingDay(today, shoppingDay);
+  return next > recent ? next : recent;
+}
