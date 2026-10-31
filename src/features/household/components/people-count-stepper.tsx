@@ -30,8 +30,8 @@ export function PeopleCountStepper({ initialCount }: { initialCount: number }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-[#E6E1D8] bg-white px-4 py-3">
-        <p className="text-sm text-[#6B655C]">Sert à découper chaque recette en repas</p>
+      <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3">
+        <p className="text-sm text-muted-foreground">Sert à découper chaque recette en repas</p>
         <div className="flex shrink-0 items-center gap-3">
           <Button
             type="button"
@@ -59,7 +59,7 @@ export function PeopleCountStepper({ initialCount }: { initialCount: number }) {
         </div>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-destructive">
           {error}
         </p>
       )}

@@ -9,7 +9,7 @@ export default async function Home() {
   const household = (await getCurrentHousehold())!;
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-[#FFF6EC] px-6 text-center">
+    <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-background px-6 text-center">
       <Image
         src="/icons/icon.svg"
         alt=""
@@ -18,13 +18,13 @@ export default async function Home() {
         className="rounded-3xl shadow-sm"
         priority
       />
-      <h1 className="text-4xl font-semibold tracking-tight text-[#7A3219]">
+      <h1 className="text-4xl font-semibold tracking-tight text-foreground">
         Mijote
       </h1>
-      <p className="max-w-xs text-balance text-[#7A3219]/80">
+      <p className="max-w-xs text-balance text-foreground/80">
         Bonjour {household.firstName}, bienvenue dans le foyer « {household.name} ».
       </p>
-      <Link href="/foyer" className="font-medium text-[#C2552D] underline underline-offset-4">
+      <Link href="/foyer" className="font-medium text-primary underline underline-offset-4">
         Mon foyer
       </Link>
       <SignOutButton />

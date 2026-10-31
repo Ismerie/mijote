@@ -26,17 +26,17 @@ export function AcceptInvitationForm({ code }: { code: string }) {
           required
           maxLength={MAX_FIRST_NAME_LENGTH}
           defaultValue={state.firstName}
-          className="h-11 bg-white"
+          className="h-11 bg-card"
         />
       </div>
 
       {state.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-destructive">
           {state.error}
         </p>
       )}
 
-      <Button type="submit" disabled={pending} className="h-11 bg-[#C2552D] text-white hover:bg-[#A8461F]">
+      <Button type="submit" disabled={pending} className="h-11">
         {pending ? "Un instant…" : "Rejoindre le foyer"}
       </Button>
     </form>
