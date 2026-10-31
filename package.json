@@ -13,7 +13,9 @@
     "db:reset": "supabase db reset",
     "db:status": "supabase status",
     "db:push": "supabase db push",
-    "db:migration": "supabase migration new"
+    "db:migration": "supabase migration new",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -37,6 +39,8 @@
     "eslint-config-next": "16.3.8",
     "supabase": "^2.119.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^3.2.7"
   }
 }

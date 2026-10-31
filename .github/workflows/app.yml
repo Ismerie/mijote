@@ -1,0 +1,24 @@
+# Vérifie le code de l'app : lint, types, tests Vitest et build de production.
+# Le build n'a pas besoin des clés Supabase : les pages qui lisent la base sont rendues à la demande.
+name: App
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    name: Lint, types, tests et build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
