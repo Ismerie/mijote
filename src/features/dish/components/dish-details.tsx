@@ -1,12 +1,12 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
+import { buttonVariants } from "@/components/ui/button";
 import { formatNumber, formatQuantity } from "@/features/ingredient/format";
 
 import type { Dish } from "../dish";
 
 // Fiche du plat (#25) : portions, ingrédients, recette et macros par portion.
-// Le bouton « Ajouter au menu de la semaine » de la maquette arrive avec le menu (#28).
 export function DishDetails({ dish }: { dish: Dish }) {
   const macros = [
     { label: "kcal", value: dish.kcal, unit: "" },
@@ -33,6 +33,11 @@ export function DishDetails({ dish }: { dish: Dish }) {
           La recette donne {dish.servings} portion{dish.servings > 1 ? "s" : ""}
         </p>
       </header>
+
+      {/* Ouvre directement le récapitulatif « Combien de fois la recette ? » avec ce plat (#28). */}
+      <Link href={`/menu/ajouter?plat=${dish.id}`} className={buttonVariants({ className: "h-12 rounded-xl text-base" })}>
+        Ajouter au menu de la semaine
+      </Link>
 
       {dish.ingredients.length > 0 && (
         <section className="flex flex-col gap-3">

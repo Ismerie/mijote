@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { isMenuLength } from "@/features/menu/dates";
 import { createClient } from "@/lib/supabase/server";
 
 import { getCurrentHousehold } from "./current-household";
@@ -54,6 +55,36 @@ export async function updatePeopleCount(peopleCount: number): Promise<{ error?: 
   const { error } = await supabase
     .from("household")
     .update({ people_count: peopleCount })
+    .eq("id", household.id);
+
+  if (error) return { error: "Le changement a échoué, réessaie dans un instant." };
+
+  revalidatePath("/", "layout");
+  return {};
+}
+
+export type MenuSettings = { shoppingDay?: number; menuLengthDays?: number };
+
+// Règle le jour des courses et la durée par défaut d'un menu (#28). Ne change pas les menus déjà créés.
+export async function updateMenuSettings(settings: MenuSettings): Promise<{ error?: string }> {
+  const { shoppingDay, menuLengthDays } = settings;
+  if (shoppingDay !== undefined && !(Number.isInteger(shoppingDay) && shoppingDay >= 0 && shoppingDay <= 6)) {
+    return { error: "Choisis un jour de la semaine." };
+  }
+  if (menuLengthDays !== undefined && !isMenuLength(menuLengthDays)) {
+    return { error: "Un menu dure 1 ou 2 semaines." };
+  }
+
+  const household = await getCurrentHousehold();
+  if (!household) return { error: "Tu n'as pas encore de foyer." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("household")
+    .update({
+      ...(shoppingDay !== undefined ? { shopping_day: shoppingDay } : {}),
+      ...(menuLengthDays !== undefined ? { menu_length_days: menuLengthDays } : {}),
+    })
     .eq("id", household.id);
 
   if (error) return { error: "Le changement a échoué, réessaie dans un instant." };
