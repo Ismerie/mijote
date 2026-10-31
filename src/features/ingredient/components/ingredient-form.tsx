@@ -32,13 +32,15 @@ type Props = {
   // null pour un nouvel ingrédient.
   ingredientId: string | null;
   initialValues: IngredientFormValues;
+  // Où revenir après « OK » (voir ingredientReturnPath).
+  returnPath?: string;
   // Ce qui s'affiche sous « Toujours en stock » (plats qui l'utilisent, suppression).
   children?: ReactNode;
 };
 
 // Fiche ingrédient (#26) : nom, rayon, façon d'acheter, toujours en stock. « OK » enregistre.
-export function IngredientForm({ ingredientId, initialValues, children }: Props) {
-  const [state, formAction, pending] = useActionState(saveIngredient.bind(null, ingredientId), {});
+export function IngredientForm({ ingredientId, initialValues, returnPath, children }: Props) {
+  const [state, formAction, pending] = useActionState(saveIngredient.bind(null, ingredientId, returnPath ?? null), {});
   const [values, setValues] = useState(initialValues);
   const set = (patch: Partial<IngredientFormValues>) => setValues((current) => ({ ...current, ...patch }));
 
