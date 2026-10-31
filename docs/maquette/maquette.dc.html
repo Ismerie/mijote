@@ -65,10 +65,15 @@ input,select,textarea{font:inherit;color:#1E1C19}
 </sc-if>
 </span>
 </button>
+<sc-if value="{{item.canEatAll}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{item.eatAll}}" aria-label="{{item.eatAllLabel}}" style="flex: none; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 1.5px solid #DCD6CB; font-size: 13px; font-weight: 600; color: #2E6A4C; text-align: center">Tout mangé</button>
+</sc-if>
+<sc-if value="{{item.noEatAll}}" hint-placeholder-val="{{false}}">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9387" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</sc-if>
 </div>
 </sc-for>
-<p style="margin: 2px 4px 0; font-size: 13px; color: #6B655C">Coche un plat quand il est cuisiné. Les repas, ce qui est mangé et quand : vue Par jour.</p>
+<p style="margin: 2px 4px 0; font-size: 13px; color: #6B655C">Coche un plat quand il est cuisiné. « Tout mangé » coche aussi tous ses repas. Le détail des repas : vue Par jour.</p>
 </div>
 </sc-if>
 <sc-if value="{{isDayView}}" hint-placeholder-val="{{false}}">
@@ -1066,6 +1071,12 @@ class Component extends DCLogic {
         toggle: () => this.setState({
           batches: this.state.batches.map((b) => b.id === bt.id ? Object.assign({}, b, { cooked: cooked ? null : todayOff(bt), cookedFrom: null }) : b),
           meals: cooked ? this.state.meals.map((x) => x.b === bt.id ? Object.assign({}, x, { eaten: false }) : x) : this.state.meals
+        }),
+        // « Tout mangé » : cuisiné et tous les repas mangés d'un coup (on cuisine et on mange dans la foulée).
+        canEatAll: !done, noEatAll: done, eatAllLabel: 'Tout mangé : ' + p.name,
+        eatAll: () => this.setState({
+          batches: this.state.batches.map((b) => b.id === bt.id && b.cooked == null ? Object.assign({}, b, { cooked: todayOff(bt) }) : b),
+          meals: this.state.meals.map((x) => x.b === bt.id ? Object.assign({}, x, { eaten: true }) : x)
         }),
         open: go({ screen: 'plat', platId: bt.plat, platBack: 'menu' })
       };
