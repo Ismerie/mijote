@@ -63,7 +63,10 @@ input,select,textarea{font:inherit;color:#1E1C19}
 <span aria-hidden="true">·</span>
 <span style="color: {{item.whenColor}}">{{item.when}}</span>
 <sc-if value="{{item.carried}}" hint-placeholder-val="{{false}}">
-<span style="background: #F6E7D6; color: #7A4210; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">Reporté</span>
+<span style="background: #F6E7D6; color: #7A4210; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">{{item.carriedLabel}}</span>
+</sc-if>
+<sc-if value="{{item.toCook}}" hint-placeholder-val="{{false}}">
+<span style="background: #ECE8E0; color: #4A453E; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">À cuisiner</span>
 </sc-if>
 </span>
 </button>
@@ -102,7 +105,11 @@ input,select,textarea{font:inherit;color:#1E1C19}
 </button>
 <button type="button" onClick="{{item.open}}" style="flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
 <span style="font-size: 16px; font-weight: 600; color: {{item.nameColor}}; text-decoration: {{item.nameDeco}}">{{item.name}}</span>
-<span style="font-size: 13px; color: #6B655C">{{item.portions}} · {{item.slotLabel}}</span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; color: #6B655C"><span>{{item.portions}} · {{item.slotLabel}}</span>
+<sc-if value="{{item.toCook}}" hint-placeholder-val="{{false}}">
+<span style="background: #ECE8E0; color: #4A453E; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">À cuisiner</span>
+</sc-if>
+</span>
 </button>
 <button type="button" onClick="{{item.startMove}}" aria-label="{{item.moveLabel}}" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; color: #6B655C; cursor: grab">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>
@@ -154,10 +161,12 @@ Ajouter un plat au menu
 <p style="margin: 0; font-size: 14px; color: #4A453E">{{prepRange}}</p>
 </section>
 <section style="display: flex; flex-direction: column; gap: 10px">
-<h2 style="margin: 0; font-size: 15px; font-weight: 600">Repas pas mangés à reporter</h2>
-<p style="margin: 0; font-size: 13px; color: #6B655C">Ils sont déjà achetés : ils passent dans le nouveau menu sans compter dans les courses. Décoche ceux que tu ne veux pas garder.</p>
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">À reporter</h2>
+<p style="margin: 0; font-size: 13px; color: #6B655C">Tout est déjà acheté : ces repas passent dans le nouveau menu sans compter dans les courses. Décoche ceux que tu ne veux pas garder.</p>
+<sc-if value="{{has_prepUncooked}}" hint-placeholder-val="{{true}}">
+<h3 style="margin: 4px 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6B655C">Pas cuisinés</h3>
 <div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; overflow: hidden">
-<sc-for list="{{prepCarry}}" as="l" hint-placeholder-count="4">
+<sc-for list="{{prepUncooked}}" as="l" hint-placeholder-count="2">
 <button type="button" onClick="{{l.toggle}}" aria-pressed="{{l.checked}}" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 52px; border-top: 1px solid {{l.sep}}">
 <span style="width: 24px; height: 24px; flex: none; border-radius: 7px; border: 2px solid {{l.boxBorder}}; background: {{l.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
 <sc-if value="{{l.checked}}" hint-placeholder-val="{{true}}">
@@ -170,10 +179,30 @@ Ajouter un plat au menu
 </span>
 </button>
 </sc-for>
-<sc-if value="{{prepNoCarry}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0; padding: 14px; color: #6B655C; font-size: 14px">Tout a été mangé, rien à reporter.</p>
-</sc-if>
 </div>
+</sc-if>
+<sc-if value="{{has_prepLeft}}" hint-placeholder-val="{{true}}">
+<h3 style="margin: 4px 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6B655C">Restes</h3>
+<div style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; overflow: hidden">
+<sc-for list="{{prepLeft}}" as="l" hint-placeholder-count="2">
+<button type="button" onClick="{{l.toggle}}" aria-pressed="{{l.checked}}" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 52px; border-top: 1px solid {{l.sep}}">
+<span style="width: 24px; height: 24px; flex: none; border-radius: 7px; border: 2px solid {{l.boxBorder}}; background: {{l.boxBg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+<sc-if value="{{l.checked}}" hint-placeholder-val="{{true}}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</sc-if>
+</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+<span style="font-weight: 600">{{l.name}}</span>
+<span style="font-size: 12px; color: #6B655C">{{l.sub}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{prepNoCarry}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 14px; color: #6B655C; font-size: 14px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px">Tout a été mangé, rien à reporter.</p>
+</sc-if>
 </section>
 </main>
 <div style="padding: 12px 20px 16px; border-top: 1px solid #E6E1D8; background: #FAF8F4">
@@ -274,6 +303,26 @@ Ajouter un plat au menu
 <span style="font-size: 13px; color: #6B655C">{{meal.batch}}</span>
 <a href="#" onClick="{{meal.openRecipe}}" style="font-size: 14px; font-weight: 600; min-height: 32px; display: flex; align-items: center">Voir la recette</a>
 </div>
+<button type="button" onClick="{{meal.toggleCooked}}" aria-pressed="{{meal.cooked}}" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 14px; padding: 12px 14px; min-height: 64px; text-align: left">
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600">Plat cuisiné</span>
+<span style="font-size: 13px; color: #6B655C">{{meal.cookedSub}}</span>
+</span>
+<span style="width: 46px; height: 28px; flex: none; border-radius: 14px; background: {{meal.switchBg}}; display: flex; justify-content: {{meal.switchSide}}; align-items: center; padding: 3px; box-sizing: border-box">
+<span style="width: 22px; height: 22px; border-radius: 11px; background: #FFFFFF"></span>
+</span>
+</button>
+<sc-if value="{{meal.canSplit}}" hint-placeholder-val="{{true}}">
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">Séparer ce repas</h2>
+<p style="margin: 0; font-size: 13px; color: #6B655C">Pour des portions que vous ne mangez pas ensemble. La nouvelle part arrive sans jour, à placer.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{splitChips}}" as="c" hint-placeholder-count="1">
+<button type="button" onClick="{{c.pick}}" style="min-height: 40px; padding: 0 14px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1.5px solid #DCD6CB; background: #FFFFFF; color: #1E1C19">{{c.label}}</button>
+</sc-for>
+</div>
+</section>
+</sc-if>
 <section style="display: flex; flex-direction: column; gap: 10px">
 <h2 style="margin: 0; font-size: 15px; font-weight: 600">Jour <span style="font-weight: 400; color: #6B655C">(facultatif)</span></h2>
 <div style="display: flex; flex-wrap: wrap; gap: 8px">
@@ -885,10 +934,11 @@ class Component extends DCLogic {
       // Un menu couvre une période qui commence le jour des courses (ici samedi), pour 1 ou 2 semaines.
       periods: [{ id: 'p1', start: '2026-10-17', days: 14 }],
       // Une « fournée » = une recette cuisinée N fois ; ses portions sont découpées en repas.
+      // cooked = jour (dans la période) où le plat a été cuisiné ; absent = « À cuisiner ».
       batches: [
         { id: 'b1', p: 'p1', plat: 'soupe', times: 1, carried: true },
-        { id: 'b2', p: 'p1', plat: 'lasagnes', times: 1 },
-        { id: 'b3', p: 'p1', plat: 'pesto', times: 1 },
+        { id: 'b2', p: 'p1', plat: 'lasagnes', times: 1, cooked: 3 },
+        { id: 'b3', p: 'p1', plat: 'pesto', times: 1, cooked: 4 },
         { id: 'b4', p: 'p1', plat: 'curry', times: 1 },
         { id: 'b5', p: 'p1', plat: 'lentilles', times: 1 },
         { id: 'b6', p: 'p1', plat: 'crepes', times: 1 }
@@ -896,7 +946,9 @@ class Component extends DCLogic {
       meals: [
         { id: 1, b: 'b1', portions: 2, day: null, slot: null },
         { id: 2, b: 'b2', portions: 2, day: 3, slot: 'Soir', eaten: true },
-        { id: 3, b: 'b2', portions: 2, day: 5, slot: 'Soir', eaten: true },
+        // Lasagnes cuisinées mardi : 2 portions mangées mardi soir, puis 1 portion mercredi et 1 jeudi.
+        { id: 3, b: 'b2', portions: 1, day: 4, slot: 'Midi', eaten: true },
+        { id: 12, b: 'b2', portions: 1, day: 5, slot: 'Midi' },
         { id: 4, b: 'b3', portions: 2, day: 4, slot: 'Midi', eaten: true },
         { id: 5, b: 'b4', portions: 2, day: null, slot: null },
         { id: 6, b: 'b4', portions: 2, day: null, slot: null },
@@ -952,6 +1004,7 @@ class Component extends DCLogic {
     const repasLabel = (n) => n + (n > 1 ? ' repas' : ' repas');
     const green = '#2E6A4C';
     const batchOf = (id) => s.batches.filter((b) => b.id === id)[0];
+    const todayOff = (bt) => { const pr = s.periods.filter((x) => x.id === bt.p)[0]; return Math.round((new Date(TODAY + 'T00:00:00Z') - new Date(pr.start + 'T00:00:00Z')) / 86400000); };
     // Découpe les portions d'une recette en repas pour le foyer : 5 portions à 2 → [2, 2, 1].
     const split = (k, times) => {
       const total = P[k].servings * times, people = s.people, out = [];
@@ -976,7 +1029,8 @@ class Component extends DCLogic {
         name: p.name, portions: portionsLabel(m.portions) + part, when: when(m),
         whenColor: (m.day == null && !m.slot) ? '#8A8378' : '#4A453E',
         slotLabel: m.slot || 'sans moment précis',
-        carried: !!bt.carried, eaten: !!m.eaten,
+        carried: !!bt.carried, carriedLabel: bt.cooked != null ? 'Reste' : 'Reporté', eaten: !!m.eaten,
+        toCook: bt.cooked == null,
         nameColor: m.eaten ? '#8A8378' : '#1E1C19', nameDeco: m.eaten ? 'line-through' : 'none',
         boxBg: m.eaten ? green : '#FFFFFF', boxBorder: m.eaten ? green : '#A8A094',
         boxLabel: (m.eaten ? 'Marquer comme pas mangé : ' : 'Marquer comme mangé : ') + p.name,
@@ -986,7 +1040,11 @@ class Component extends DCLogic {
         startMove: go({ moveId: m.id, dragId: null }),
         dragStart: (e) => { try { e.dataTransfer.setData('text/plain', String(m.id)); e.dataTransfer.effectAllowed = 'move'; } catch (err) {} this.setState({ dragId: m.id, moveId: null }); },
         dragEnd: () => { if (this.state.dragId) this.setState({ dragId: null }); },
-        toggle: () => this.setState({ meals: this.state.meals.map((x) => x.id === m.id ? Object.assign({}, x, { eaten: !x.eaten }) : x) }),
+        // Cocher « mangé » sur un plat pas encore cuisiné le marque aussi cuisiné.
+        toggle: () => this.setState({
+          meals: this.state.meals.map((x) => x.id === m.id ? Object.assign({}, x, { eaten: !x.eaten }) : x),
+          batches: (!m.eaten && bt.cooked == null) ? this.state.batches.map((b) => b.id === bt.id ? Object.assign({}, b, { cooked: m.day != null ? m.day : todayOff(bt) }) : b) : this.state.batches
+        }),
         open: go({ screen: 'meal', mealId: m.id })
       };
     });
@@ -1019,7 +1077,7 @@ class Component extends DCLogic {
     const setMeal = (o) => () => this.setState({ meals: this.state.meals.map((x) => x.id === cm.id ? Object.assign({}, x, o) : x) });
     const chip = (sel) => ({ bg: sel ? green : '#FFFFFF', color: sel ? '#FFFFFF' : '#1E1C19', border: sel ? green : '#DCD6CB' });
     let meal = { name: '', portions: '', batch: '', openRecipe: null };
-    let dayChips = [], slotChips = [];
+    let dayChips = [], slotChips = [], splitChips = [];
     if (cm) {
       const bt = batchOf(cm.b), p = P[bt.plat];
       const siblings = s.meals.filter((x) => x.b === cm.b);
@@ -1027,8 +1085,33 @@ class Component extends DCLogic {
         name: p.name,
         portions: portionsLabel(cm.portions) + (siblings.length > 1 ? ' · repas ' + (siblings.indexOf(cm) + 1) + ' sur ' + siblings.length : ''),
         batch: 'Recette ×' + bt.times + ' (' + portionsLabel(p.servings * bt.times) + ')' + (bt.carried ? ', reportée du menu précédent' : ''),
-        openRecipe: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'plat', platId: bt.plat, platBack: 'meal' }); }
+        openRecipe: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'plat', platId: bt.plat, platBack: 'meal' }); },
+        // « Plat cuisiné » vaut pour toute la fournée ; le décocher décoche aussi « mangé » sur ses repas.
+        cooked: bt.cooked != null,
+        cookedSub: bt.cooked != null ? 'Cuisiné le ' + (bt.cookedFrom || shortDay(dateAt(batchPeriod(cm.b).start, bt.cooked))) + ', pour tous les repas de ce plat' : 'Pas encore cuisiné',
+        switchBg: bt.cooked != null ? green : '#CFC8BC', switchSide: bt.cooked != null ? 'flex-end' : 'flex-start',
+        toggleCooked: () => {
+          const on = bt.cooked == null;
+          this.setState({
+            batches: this.state.batches.map((b) => b.id === bt.id ? Object.assign({}, b, { cooked: on ? todayOff(bt) : null }) : b),
+            meals: on ? this.state.meals : this.state.meals.map((x) => x.b === bt.id ? Object.assign({}, x, { eaten: false }) : x)
+          });
+        },
+        canSplit: cm.portions > 1
       };
+      // Séparer : n portions partent dans un nouveau repas du même plat, sans jour ; le total ne change pas.
+      splitChips = Array.from({ length: cm.portions - 1 }, (_, i) => i + 1).map((n) => ({
+        label: (cm.portions - n) + ' + ' + n,
+        pick: () => {
+          const st = this.state, nid = st.meals.reduce((mx, x) => Math.max(mx, x.id), 0) + 1;
+          const meals = [];
+          st.meals.forEach((x) => {
+            if (x.id === cm.id) { meals.push(Object.assign({}, x, { portions: x.portions - n })); meals.push({ id: nid, b: x.b, portions: n, day: null, slot: null }); }
+            else meals.push(x);
+          });
+          this.setState({ meals: meals });
+        }
+      }));
       const mp = batchPeriod(cm.b);
       dayChips = [{ label: 'Pas de jour', v: null }].concat(Array.from({ length: mp.days }, (_, i) => ({ label: cap(shortDay(dateAt(mp.start, i))), v: i }))).map((c) => Object.assign({ label: c.label, selected: cm.day === c.v, pick: setMeal({ day: c.v }) }, chip(cm.day === c.v)));
       slotChips = [{ label: 'Aucun', v: null }].concat(D.slots.map((x) => ({ label: x, v: x }))).map((c) => Object.assign({ label: c.label, selected: cm.slot === c.v, pick: setMeal({ slot: c.v }) }, chip(cm.slot === c.v)));
@@ -1149,16 +1232,21 @@ class Component extends DCLogic {
       return {
         name: P[batchOf(m.b).plat].name, sub: portionsLabel(m.portions) + ' · ' + when(m), checked: on,
         sep: i === 0 ? 'transparent' : '#EFEBE3', boxBg: on ? green : '#FFFFFF', boxBorder: on ? green : '#A8A094',
+        cooked: batchOf(m.b).cooked != null,
         toggle: () => { const k = Object.assign({}, this.state.prepSkip); k[m.id] = !k[m.id]; this.setState({ prepSkip: k }); }
       };
     });
+    // Deux groupes : plats jamais cuisinés (reportés entiers) et restes d'un plat déjà cuisiné.
+    const sepFix = (arr) => arr.map((l, i) => Object.assign({}, l, { sep: i === 0 ? 'transparent' : '#EFEBE3' }));
+    const prepUncooked = sepFix(prepCarry.filter((l) => !l.cooked));
+    const prepLeft = sepFix(prepCarry.filter((l) => l.cooked));
     const confirmPrep = () => {
       const st = this.state, nid = 'p' + Date.now();
       const moving = carryMeals.filter((m) => !st.prepSkip[m.id]);
       const newBatches = {};
       moving.forEach((m) => {
         const b = batchOf(m.b);
-        if (!newBatches[b.id]) newBatches[b.id] = { id: b.id + '-r' + nid, p: nid, plat: b.plat, times: b.times, carried: true };
+        if (!newBatches[b.id]) newBatches[b.id] = { id: b.id + '-r' + nid, p: nid, plat: b.plat, times: b.times, carried: true, cooked: b.cooked != null ? 0 : null, cookedFrom: b.cooked != null ? (b.cookedFrom || shortDay(dateAt(batchPeriod(m.b).start, b.cooked))) : null };
       });
       const meals = st.meals.map((m) => moving.indexOf(m) !== -1 ? Object.assign({}, m, { b: newBatches[m.b].id, day: null, slot: null }) : m);
       const periods = st.periods.concat([{ id: nid, start: nextStart, days: st.prepDays }]);
@@ -1241,6 +1329,7 @@ class Component extends DCLogic {
       openPrep: go({ screen: 'prep', prepDays: s.duration, prepSkip: {} }),
       prepDurations: [7, 14].map((n) => Object.assign({ label: lengthLabel(n), selected: s.prepDays === n, pick: go({ prepDays: n }) }, chip(s.prepDays === n))),
       prepRange: rangeLabel(prepPeriod), prepCarry: prepCarry, prepNoCarry: prepCarry.length === 0, confirmPrep: confirmPrep,
+      prepUncooked: prepUncooked, prepLeft: prepLeft, has_prepUncooked: prepUncooked.length > 0, has_prepLeft: prepLeft.length > 0,
       shopDayChips: ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'].map((l, i) => Object.assign({ label: l, selected: s.shopDay === i, pick: go({ shopDay: i }) }, chip(s.shopDay === i))),
       durationChips: [7, 14].map((n) => Object.assign({ label: lengthLabel(n), selected: s.duration === n, pick: go({ duration: n }) }, chip(s.duration === n))),
       coursesPeriod: period ? 'Menu ' + rangeLabel(period).charAt(0).toLowerCase() + rangeLabel(period).slice(1) : 'Pas de menu pour cette période',
@@ -1256,7 +1345,7 @@ class Component extends DCLogic {
       openRecap: go({ screen: 'addRecap', recapBack: 'addPick' }),
       confirmMulti: confirmMulti,
 
-      meal: meal, dayChips: dayChips, slotChips: slotChips, removeMeal: removeMeal,
+      meal: meal, dayChips: dayChips, slotChips: slotChips, splitChips: splitChips, removeMeal: removeMeal,
 
       search: s.search, onSearch: (e) => this.setState({ search: e.target.value }),
       platList: platList, platsEmpty: platList.length === 0,
