@@ -21,7 +21,7 @@ Si la maquette change sur claude.ai, il faut refaire la copie et les captures da
 
 | Capture | Écran | Tickets |
 |---|---|---|
-| [01-menu-liste](ecrans/01-menu-liste.png) | Accueil : menu en cours, vue « En liste » : une carte par plat ajouté, case « cuisiné », bouton « Tout mangé », portions restantes, badges « Reporté » et « Reste » | #28, #30 |
+| [01-menu-liste](ecrans/01-menu-liste.png) | Accueil : menu en cours, vue « En liste » : une carte par plat ajouté, case à trois états (à cuisiner, cuisiné, tout mangé), portions restantes, badges « Reporté » et « Reste » | #28, #30 |
 | [02-menu-par-jour](ecrans/02-menu-par-jour.png) | Accueil, vue « Par jour » : les repas, case « mangé », badge « À cuisiner », « À placer » puis tous les jours du menu | #29 |
 | [03-menu-deplacer-repas](ecrans/03-menu-deplacer-repas.png) | Vue « Par jour » après la poignée ⋮⋮ : boutons « Placer ici » | #29 |
 | [04-preparer-menu-suivant](ecrans/04-preparer-menu-suivant.png) | Préparer le menu suivant : durée, repas à reporter en deux groupes (« Pas cuisinés », « Restes ») | #30 |
