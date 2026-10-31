@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { createHousehold } from "./actions";
+import { createHousehold } from "../actions";
 import {
   DEFAULT_PEOPLE_COUNT,
   MAX_FIRST_NAME_LENGTH,
   MAX_HOUSEHOLD_NAME_LENGTH,
   MAX_PEOPLE_COUNT,
   MIN_PEOPLE_COUNT,
-} from "./household-fields";
+} from "../household-fields";
 
 export function CreateHouseholdForm() {
   const [state, formAction, pending] = useActionState(createHousehold, {});

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/features/auth/current-user";
 import { getCurrentHousehold } from "@/features/household/current-household";
 import { getHouseholdMembers } from "@/features/household/household-members";
-import { PeopleCountStepper } from "@/features/household/people-count-stepper";
+import { PeopleCountStepper } from "@/features/household/components/people-count-stepper";
 
 export const metadata: Metadata = { title: "Mon foyer · Mijote" };
 

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { SignOutButton } from "@/features/auth/sign-out-button";
-import { CreateHouseholdForm } from "@/features/household/create-household-form";
+import { CreateHouseholdForm } from "@/features/household/components/create-household-form";
 import { getCurrentHousehold } from "@/features/household/current-household";
 
 export const metadata: Metadata = { title: "Bienvenue · Mijote" };

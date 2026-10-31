@@ -4,8 +4,8 @@ import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { updatePeopleCount } from "./actions";
-import { MAX_PEOPLE_COUNT, MIN_PEOPLE_COUNT } from "./household-fields";
+import { updatePeopleCount } from "../actions";
+import { MAX_PEOPLE_COUNT, MIN_PEOPLE_COUNT } from "../household-fields";
 
 // Boutons − et + pour régler le nombre de personnes du foyer (#9).
 // La valeur affichée change tout de suite, et revient en arrière si l'enregistrement échoue.
