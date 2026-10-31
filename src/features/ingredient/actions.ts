@@ -8,12 +8,15 @@ import { createClient } from "@/lib/supabase/server";
 
 import { readIngredientForm, validateIngredient } from "./ingredient-fields";
 import { getIngredient } from "./queries";
+import { INGREDIENTS_PATH, isIngredientReturnPath } from "./return-path";
 
 export type SaveIngredientState = { error?: string };
 
 // Crée (ingredientId null) ou modifie un ingrédient du catalogue (#26).
+// returnPath : la page où revenir ensuite, le catalogue ou les courses (#32).
 export async function saveIngredient(
   ingredientId: string | null,
+  returnPath: string | null,
   _prev: SaveIngredientState,
   formData: FormData,
 ): Promise<SaveIngredientState> {
@@ -43,7 +46,9 @@ export async function saveIngredient(
   if (error) return { error: "L'enregistrement a échoué, réessaie dans un instant." };
 
   revalidatePath("/plats", "layout");
-  redirect("/plats/ingredients");
+  // « Toujours en stock » ou la façon d'acheter changent la liste de courses.
+  revalidatePath("/courses");
+  redirect(returnPath && isIngredientReturnPath(returnPath) ? returnPath : INGREDIENTS_PATH);
 }
 
 // Supprime un ingrédient, seulement s'il n'est utilisé dans aucun plat (#26).
