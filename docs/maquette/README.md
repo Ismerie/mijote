@@ -21,13 +21,13 @@ Si la maquette change sur claude.ai, il faut refaire la copie et les captures da
 
 | Capture | Écran | Tickets |
 |---|---|---|
-| [01-menu-liste](ecrans/01-menu-liste.png) | Accueil : menu en cours, vue « En liste » (période, repas, case « mangé », badge « Reporté ») | #28, #30 |
-| [02-menu-par-jour](ecrans/02-menu-par-jour.png) | Accueil, vue « Par jour » : « À placer » puis tous les jours du menu | #29 |
+| [01-menu-liste](ecrans/01-menu-liste.png) | Accueil : menu en cours, vue « En liste » : une carte par plat ajouté, case ronde à trois états (à cuisiner, cuisiné, tout mangé), portions restantes, badges « Reporté » et « Reste » | #28, #30 |
+| [02-menu-par-jour](ecrans/02-menu-par-jour.png) | Accueil, vue « Par jour » : les repas (« Lasagnes (1) »), case carrée « mangé », point « à cuisiner », « À placer » puis tous les jours du menu | #29 |
 | [03-menu-deplacer-repas](ecrans/03-menu-deplacer-repas.png) | Vue « Par jour » après la poignée ⋮⋮ : boutons « Placer ici » | #29 |
-| [04-preparer-menu-suivant](ecrans/04-preparer-menu-suivant.png) | Préparer le menu suivant : durée, repas pas mangés à reporter | #30 |
+| [04-preparer-menu-suivant](ecrans/04-preparer-menu-suivant.png) | Préparer le menu suivant : durée, repas à reporter en deux groupes (« Pas cuisinés », « Restes ») | #30 |
 | [05-ajouter-choisir-plats](ecrans/05-ajouter-choisir-plats.png) | Ajouter au menu, étape 1 : choisir plusieurs plats | #28 |
-| [06-ajouter-recap](ecrans/06-ajouter-recap.png) | Ajouter au menu, étape 2 : × N par recette et découpe en repas | #28 |
-| [07-repas](ecrans/07-repas.png) | Fiche repas : jour et moment facultatifs, retirer le repas | #29 |
+| [06-ajouter-recap](ecrans/06-ajouter-recap.png) | Ajouter au menu, étape 2 : × N par recette (N cartes à cuisiner) et découpe en repas | #28 |
+| [07-repas](ecrans/07-repas.png) | Fiche repas (depuis Par jour) : lien vers le plat au menu, « Séparer ce repas », jour et moment facultatifs, retirer le repas | #29 |
 | [08-plats](ecrans/08-plats.png) | Onglet Plats : liste, recherche, badge « Au menu » | #25 |
 | [09-fiche-plat](ecrans/09-fiche-plat.png) | Fiche du plat : portions, ingrédients, recette, macros | #25 (bouton « Ajouter au menu » : #28) |
 | [10-modifier-plat](ecrans/10-modifier-plat.png) | Modifier un plat (et le supprimer, en bas) | #25 |
@@ -37,6 +37,7 @@ Si la maquette change sur claude.ai, il faut refaire la copie et les captures da
 | [14-courses](ecrans/14-courses.png) | Onglet Courses : lignes par rayon, paquets, « Courses terminées » | #32 |
 | [15-foyer](ecrans/15-foyer.png) | Mon foyer : membres, nombre de personnes, jour des courses, durée du menu | #9, #28 |
 | [16-inviter](ecrans/16-inviter.png) | Inviter dans le foyer | #8 (fait) |
+| [17-plat-au-menu](ecrans/17-plat-au-menu.png) | Plat au menu (depuis En liste) : état à trois temps, ses repas avec case « mangé », voir la recette, retirer du menu | #28 |
 
 Barre du bas commune à tous les écrans : Menu, Plats, Courses, Foyer.
 
@@ -47,5 +48,5 @@ Relevés dans la source, à reprendre dans le thème (ticket #17) :
 - Police : Geist.
 - Fond `#FAF8F4`, cartes `#FFFFFF` avec bordure `#E6E1D8`, texte `#1E1C19`, texte secondaire `#6B655C`.
 - Couleur principale (boutons, onglet actif, cases cochées) : vert `#2E6A4C`, plus foncé au survol `#1F4D36`.
-- Danger (supprimer) : `#A3341F`. Badge « Reporté » : fond `#F6E7D6`, texte `#5E3410`.
+- Danger (supprimer) : `#A3341F`. Badges « Reporté » et « Reste » : fond `#F6E7D6`, texte `#5E3410`. Badge « À cuisiner » : fond `#ECE8E0`, texte `#4A453E`.
 - Coins arrondis de 10 à 14 px. Zones touchables d'au moins 44 px de haut.
