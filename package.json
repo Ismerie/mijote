@@ -14,7 +14,7 @@
     "db:status": "supabase status",
     "db:push": "supabase db push",
     "db:migration": "supabase migration new",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
