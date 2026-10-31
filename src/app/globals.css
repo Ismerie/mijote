@@ -35,6 +35,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -48,17 +49,18 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Charte Mijote : seule source des couleurs de l'app (#17).
+/* Charte Mijote, reprise de la maquette (docs/maquette/README.md) : seule source des couleurs de l'app (#17).
    Pour changer de thème, modifie les valeurs ici ; les composants utilisent les classes bg-primary, text-foreground…
    Les couleurs de manifest.ts et de layout.tsx (themeColor) restent à part : elles doivent être écrites en dur. */
 :root {
-  --background: #FFF6EC;
-  --foreground: #7A3219;
+  --background: #FAF8F4;
+  --foreground: #1E1C19;
   --card: #FFFFFF;
-  --card-foreground: #7A3219;
+  --card-foreground: #1E1C19;
   --popover: #FFFFFF;
-  --popover-foreground: #7A3219;
-  --primary: #C2552D;
+  --popover-foreground: #1E1C19;
+  --primary: #2E6A4C;
+  --primary-hover: #1F4D36;
   --primary-foreground: #FFFFFF;
   --secondary: #F6E7D6;
   --secondary-foreground: #5E3410;
@@ -69,21 +71,21 @@
   --destructive: #A3341F;
   --border: #E6E1D8;
   --input: #E6E1D8;
-  --ring: #C2552D;
-  --chart-1: #C2552D;
-  --chart-2: #7A3219;
+  --ring: #2E6A4C;
+  --chart-1: #2E6A4C;
+  --chart-2: #5E3410;
   --chart-3: #6B655C;
   --chart-4: #E6E1D8;
   --chart-5: #F6E7D6;
   --radius: 0.625rem;
-  --sidebar: #FFF6EC;
-  --sidebar-foreground: #7A3219;
-  --sidebar-primary: #C2552D;
+  --sidebar: #FAF8F4;
+  --sidebar-foreground: #1E1C19;
+  --sidebar-primary: #2E6A4C;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F6E7D6;
   --sidebar-accent-foreground: #5E3410;
   --sidebar-border: #E6E1D8;
-  --sidebar-ring: #C2552D;
+  --sidebar-ring: #2E6A4C;
 }
 
 .dark {
